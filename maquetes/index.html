@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Proposta de layout da loja · Chaussettes Orphelines</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root { --papel: #fbf7f2; --la: #f3ebe1; --tinta: #231d1a; --tinta-2: #5f534c; --fio: #e3d7c9; --framboesa: #a3303e; --verde: #2e5a4c; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #ece5dc; color: var(--tinta); font: 15px/1.55 "DM Sans", system-ui, sans-serif; }
+  h1, h2 { font-family: "Playfair Display", Georgia, serif; font-weight: 600; margin: 0; line-height: 1.15; }
+  a { color: inherit; }
+  header.topo { background: var(--tinta); color: #f3ebe1; padding: 28px 40px 0; }
+  header.topo h1 { font-size: 1.9rem; color: #fff; }
+  header.topo p { max-width: 90ch; margin: 8px 0 0; color: #d9cfc4; }
+  header.topo p a { color: #fff; }
+  .abas { display: flex; gap: 4px; margin-top: 22px; flex-wrap: wrap; }
+  .abas button { border: 0; background: transparent; color: #d9cfc4; font: 600 .95rem "DM Sans", sans-serif; padding: 12px 18px; border-radius: 8px 8px 0 0; cursor: pointer; }
+  .abas button[aria-selected="true"] { background: #ece5dc; color: var(--tinta); }
+  .barra { display: flex; gap: 24px; align-items: center; padding: 16px 40px; flex-wrap: wrap; }
+  .barra label { display: inline-flex; gap: 8px; align-items: center; font-weight: 600; cursor: pointer; }
+  .barra input { width: 18px; height: 18px; accent-color: var(--framboesa); }
+  .barra a.abrir { font-weight: 600; }
+  .palco { display: grid; grid-template-columns: minmax(0, 1fr) 360px 340px; gap: 28px; padding: 0 40px 48px; align-items: start; }
+  .tela h2 { font-family: "DM Sans", sans-serif; font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; color: var(--tinta-2); margin-bottom: 10px; }
+  .pc { width: 100%; aspect-ratio: 1440 / 900; overflow: hidden; border-radius: 10px; background: #fff; box-shadow: 0 10px 30px rgba(35, 29, 26, .18); position: relative; }
+  .pc iframe { width: 1440px; height: 900px; border: 0; transform-origin: 0 0; position: absolute; top: 0; left: 0; }
+  .cel { width: 360px; height: 760px; border-radius: 38px; background: #1b1715; padding: 12px; box-shadow: 0 10px 30px rgba(35, 29, 26, .25); }
+  .cel div { width: 336px; height: 736px; border-radius: 28px; overflow: hidden; position: relative; background: #fff; }
+  .cel iframe { width: 390px; height: 854px; border: 0; transform: scale(.8615); transform-origin: 0 0; }
+  .notas { background: var(--papel); border-radius: 10px; padding: 22px 22px 26px; display: grid; gap: 18px; }
+  .notas h3 { font-family: "Playfair Display", serif; font-size: 1.25rem; margin: 0; }
+  .notas ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; }
+  .notas li { display: grid; gap: 4px; }
+  .tag { justify-self: start; font-size: .72rem; font-weight: 700; padding: 2px 8px; border-radius: 10px; background: var(--la); color: var(--tinta-2); }
+  .tag.h { background: #f6dfe2; color: #7c2330; }
+  .tag.d { background: #e1ece7; color: var(--verde); }
+  .tag.r { background: #e7e3f1; color: #4a3f73; }
+  .decisoes { background: #fff8db; border-radius: 10px; padding: 18px 22px; }
+  .decisoes h3 { margin-bottom: 10px; }
+  .decisoes p { margin: 6px 0 0; font-size: .9rem; }
+  .decisoes b { background: #ffd24d; padding: 0 5px; border-radius: 3px; }
+  @media (max-width: 1700px) { .palco { grid-template-columns: minmax(0, 1fr) 360px; } .notas-col { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; } }
+  @media (max-width: 900px) { .palco { grid-template-columns: 1fr; padding: 0 16px 32px; } .notas-col { grid-template-columns: 1fr; } header.topo, .barra { padding-inline: 16px; } }
+</style>
+</head>
+<body>
+<header class="topo">
+  <h1>Proposta de layout da loja (R4)</h1>
+  <p>Maquetes com os produtos, preços, fotos e avaliações reais da loja. Por trás de cada escolha estão os dados do Shopify, a loja de 2019 a 2021 (quando vendia mais, ver <a href="../historico-loja/o-que-mudou.html">o que mudou</a>) e as referências que você escolheu. Role dentro das telas; no computador, os botões funcionam.</p>
+  <nav class="abas" role="tablist"></nav>
+</header>
+<div class="barra">
+  <label><input type="checkbox" id="marcas"> Mostrar em amarelo o que depende de decisão da Marcia</label>
+  <a class="abrir" id="abrir" href="#" target="_blank">Abrir esta página sozinha ↗</a>
+</div>
+<div class="palco">
+  <div class="tela"><h2>Computador</h2><div class="pc" id="pc"><iframe id="f-pc" title="Computador"></iframe></div></div>
+  <div class="tela"><h2>Celular (64 % das visitas)</h2><div class="cel"><div><iframe id="f-cel" title="Celular"></iframe></div></div></div>
+  <div class="notas-col" style="display:grid;gap:20px">
+    <section class="notas" id="notas"></section>
+    <section class="decisoes"><h3 style="font-family:'Playfair Display',serif;font-size:1.2rem">Decisões da Marcia nesta proposta</h3>
+      <p><b>D1</b> Frete grátis: <b>60 €</b> na maquete. Hoje é 150 € (pedido médio: 80 €). Em 2020 era 45 €; em 2021, 65 €.</p>
+      <p><b>D2</b> Kits de Natal: os 3 coffrets são sugestões com produtos e preços reais (−10 %).</p>
+      <p><b>D3</b> Desconto por quantidade: <b>−10 % a partir de 3 pares, −15 % a partir de 5</b> na maquete. Hoje é −5 %. Em 2021 era −20 % e −30 % (10 pares).</p>
+      <p><b>D5</b> Números de impacto: os do pôster e do cartaz « 35 tonnes ». A Marcia confirma.</p>
+      <p><b>D11</b> (nova) Voltar com a <b>etiqueta de devolução</b> para reciclar as meias velhas (até 2021; ~2 € por pedido). Os clientes elogiavam e reclamavam quando não vinha.</p>
+      <p><b>D12</b> (nova) Troca grátis, com prazo maior no Natal (até 2021 era assim; hoje o cliente paga).</p>
+    </section>
+  </div>
+</div>
+<script>
+const PAGINAS = [
+  { id: "a", nome: "Página inicial A · vitrine", url: "accueil.html", notas: [
+    ["Produto, preço e estrelas na primeira tela", "Hoje a página inicial não mostra nenhum produto com preço; em 2019 e 2020 mostrava (packs e pré-vendas com preço).", "h", "Loja em 2020"],
+    ["Faixa de garantias logo abaixo", "França, reciclado, frete, troca: as 4 razões para comprar aqui, antes de rolar.", "r", "Label Chaussette"],
+    ["« Les plus aimées »: 8 produtos", "Meias são 88 % das vendas; LASKA, FUNNY e SUMMER fazem 37 %. Lã primeiro, porque é inverno.", "d", "Dados Shopify"],
+    ["Régua do pack", "Mostrar o desconto por quantidade como uma régua, não um texto. Em 2021 o desconto era grande e estava em cada página de meia.", "r", "Le Slip Français"],
+    ["Coffrets de Natal", "Natal = 62 % das vendas do ano; o cliente já compra ~3 itens.", "d", "Dados Shopify"],
+    ["A etiqueta de devolução", "A ideia que só a Chaussettes Orphelines tem, e que os clientes citavam nas avaliações. Sumiu do site em 2022.", "h", "Loja em 2020-21"],
+    ["Impacto e avaliações reais", "Números da Marcia; avaliações verdadeiras dos clientes (Stamped, 201, a importar no Judge.me).", "r", "Thistle Farms"],
+  ]},
+  { id: "b", nome: "Página inicial B · missão", url: "accueil.html?v=b", notas: [
+    ["Mesma loja, outra primeira tela", "A missão abre a página, com foto grande e os números logo abaixo. Os produtos vêm em seguida.", "r", "Thistle Farms · Worn Wear"],
+    ["Para quem é", "O público que mais compra é o ecológico (buscadores verdes convertem 3 a 4 vezes mais) e quem vem do site da associação.", "d", "Dados Shopify"],
+    ["O risco", "Uma tela a mais até o primeiro preço. No celular, onde está a maior perda, a versão A tende a vender mais.", "d", "Dados Shopify"],
+    ["Minha recomendação", "Versão A como página inicial; a B como página « Notre histoire », para quem chega pela associação e pelos e-mails.", "", ""],
+  ]},
+  { id: "col", nome: "Coleção", url: "collection.html", notas: [
+    ["Filtro pela altura da meia", "Invisibles, basses, mi-mollet, hautes, mi-cuisses: é como as pessoas escolhem meia. Hoje são 3 coleções separadas no menu.", "r", "Bombas"],
+    ["Régua do pack no topo", "Lembra o desconto antes de escolher.", "r", "Label Chaussette"],
+    ["Bloco de Natal no meio da grade", "Quem está olhando meias vê os coffrets sem sair da página.", "r", "Archiduchesse"],
+    ["Fotos", "As fotos atuais misturam estilos e algumas têm texto escrito por cima (« Chiné Bordeaux », « PACK TOUNDRA »). Para o tema novo: uma foto de catálogo sem texto, todas no mesmo fundo, e a foto de ambiente como segunda (aparece ao passar o mouse).", "r", "Archiduchesse · Socks & Co"],
+  ]},
+  { id: "prod", nome: "Produto (LASKA)", url: "produit.html", notas: [
+    ["Preço grande e o preço do pack ao lado", "« 22,50 € la paire dès 3 paires »: o pack aparece na hora de decidir.", "r", "Bombas"],
+    ["Cores com nome e tamanhos em botões", "Tamanho esgotado riscado (em 2021 dizia « Victime de son succès »). A dica de tamanho é o texto da própria loja.", "h", "Loja em 2021"],
+    ["Sob o botão: frete, etiqueta, troca", "Tudo o que a página de 2021 dizia, em 3 linhas em vez de 4 parágrafos.", "h", "Loja em 2021"],
+    ["Frase de impacto perto da compra", "Uma frase só, no lugar do texto longo de hoje.", "r", "Krochet Kids"],
+    ["Um bloco de avaliações só", "Hoje são três blocos que se contradizem, com a nota boa escondida e em inglês.", "d", "Análise da loja"],
+    ["No celular, barra fixa « Ajouter au panier »", "O celular converte 0,24 % contra 0,70 % no computador.", "d", "Dados Shopify"],
+  ]},
+  { id: "pan", nome: "Carrinho", url: "produit.html?panier=1", notas: [
+    ["Abre ao lado, sem sair da página", "A pessoa vê o que pôs e continua comprando.", "", ""],
+    ["Duas barras: frete grátis e pack", "« Plus que 6 € » e « Ajoutez 1 paire »: as duas empurram o pedido para cima, que é o que o pedido médio de 80 € já mostra que o cliente faz.", "d", "Dados Shopify"],
+    ["Sugestão de uma meia barata", "A SUMMER (17 €) completa os 3 pares e o frete grátis de uma vez.", "", ""],
+    ["« C’est pour offrir »", "Embalagem e cartão de presente: no Natal, a maioria compra para presentear.", "r", "Happy Socks · Thistle Farms"],
+    ["Hoje", "Só 45 % de quem chega ao pagamento compra; 60 % do carrinho chega ao pagamento. Frete visível antes do pagamento ajuda nas duas etapas.", "d", "Dados Shopify"],
+  ]},
+];
+const abas = document.querySelector(".abas"), fPc = document.getElementById("f-pc"), fCel = document.getElementById("f-cel");
+const marcas = document.getElementById("marcas");
+let atual = PAGINAS[0];
+function url(p) { return p.url + (marcas.checked ? (p.url.includes("?") ? "&" : "?") + "marcas=1" : ""); }
+function mostrar(p) {
+  atual = p;
+  abas.querySelectorAll("button").forEach(b => b.setAttribute("aria-selected", b.dataset.id === p.id));
+  fPc.src = url(p); fCel.src = url(p); document.getElementById("abrir").href = url(p);
+  document.getElementById("notas").innerHTML = `<h3>Por que assim</h3><ul>${p.notas.map(([t, d, c, o]) => `<li>${o ? `<span class="tag ${c}">${o}</span>` : ""}<b>${t}</b><span>${d}</span></li>`).join("")}</ul>`;
+  history.replaceState(null, "", "#" + p.id);
+}
+abas.innerHTML = PAGINAS.map(p => `<button role="tab" data-id="${p.id}">${p.nome}</button>`).join("");
+abas.onclick = e => { const b = e.target.closest("button"); if (b) mostrar(PAGINAS.find(p => p.id === b.dataset.id)); };
+marcas.onchange = () => mostrar(atual);
+function escala() { const w = document.getElementById("pc").clientWidth; fPc.style.transform = `scale(${w / 1440})`; }
+addEventListener("resize", escala); escala();
+mostrar(PAGINAS.find(p => "#" + p.id === location.hash) || PAGINAS[0]);
+</script>
+</body>
+</html>

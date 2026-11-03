@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>LASKA · maquette Chaussettes Orphelines</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="loja.css">
+<style>
+  .trilha { font-size: .85rem; color: var(--tinta-2); padding: 18px 0; }
+  .trilha a { text-decoration: none; }
+  .produto { display: grid; grid-template-columns: 1.25fr 1fr; gap: clamp(32px, 5vw, 72px); align-items: start; padding-bottom: 72px; }
+  .galeria { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .galeria img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: var(--raio); background: var(--la); }
+  .galeria img:first-child { grid-column: 1 / -1; aspect-ratio: 3 / 2; }
+  .pontos { display: none; }
+  .info { position: sticky; top: 100px; display: grid; gap: 22px; }
+  .info h1 { font-size: clamp(2rem, 3vw, 2.6rem); }
+  .info .sub { color: var(--tinta-2); margin-top: 6px; }
+  .preco-grande { display: flex; align-items: baseline; gap: 14px; font-size: 1.6rem; font-weight: 700; }
+  .preco-grande small { font-size: .9rem; font-weight: 500; color: var(--verde); }
+  .rotulo { display: flex; justify-content: space-between; font-size: .9rem; margin-bottom: 10px; }
+  .rotulo b { font-weight: 600; }
+  .rotulo a { color: var(--tinta-2); }
+  .amostras { display: flex; gap: 10px; flex-wrap: wrap; }
+  .amostras button { width: 38px; height: 38px; border-radius: 50%; border: 0; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .15); outline-offset: 3px; }
+  .amostras button[aria-pressed="true"] { outline: 2px solid var(--tinta); }
+  .tamanhos { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .tamanhos button { height: 48px; border-radius: var(--raio); border: 1px solid var(--fio); background: #fff; font-weight: 500; }
+  .tamanhos button[aria-pressed="true"] { border-color: var(--tinta); box-shadow: inset 0 0 0 1px var(--tinta); font-weight: 700; }
+  .tamanhos button:disabled { color: #b3a79d; text-decoration: line-through; background: transparent; cursor: not-allowed; }
+  .dica { font-size: .85rem; color: var(--tinta-2); margin-top: 8px; }
+  .compra { display: grid; grid-template-columns: 120px 1fr; gap: 10px; }
+  .qtd { display: grid; grid-template-columns: 1fr 1fr 1fr; border: 1px solid var(--fio); border-radius: var(--raio); background: #fff; align-items: center; text-align: center; }
+  .qtd button { background: none; border: 0; height: 52px; font-size: 1.2rem; }
+  .sob-botao { display: grid; gap: 10px; font-size: .9rem; }
+  .sob-botao p { display: flex; gap: 10px; align-items: center; }
+  .sob-botao .ico { width: 20px; height: 20px; color: var(--verde); flex: none; }
+  .impacto-linha { background: var(--la); border-radius: var(--raio); padding: 16px 18px; display: flex; gap: 14px; align-items: start; font-size: .93rem; }
+  .impacto-linha .ico { color: var(--framboesa); flex: none; margin-top: 2px; }
+  .impacto-linha b { font-weight: 600; }
+
+  .avis-produto { display: grid; grid-template-columns: 300px 1fr; gap: 56px; }
+  .resumo-avis { display: grid; gap: 12px; align-content: start; }
+  .resumo-avis .grande { font-family: var(--serif); font-size: 3.4rem; line-height: 1; }
+  .barra { display: grid; grid-template-columns: 34px 1fr 34px; gap: 10px; align-items: center; font-size: .85rem; color: var(--tinta-2); }
+  .barra i { height: 6px; border-radius: 3px; background: var(--fio); position: relative; overflow: hidden; }
+  .barra i::after { content: ""; position: absolute; inset: 0 auto 0 0; width: var(--p); background: var(--tinta); }
+  .lista-avis { display: grid; gap: 0; }
+  .lista-avis article { padding: 22px 0; border-top: 1px solid var(--fio); display: grid; gap: 8px; }
+  .lista-avis header { display: flex; justify-content: space-between; font-size: .88rem; color: var(--tinta-2); }
+  .lista-avis header b { color: var(--tinta); }
+
+  /* Barra fixa do celular */
+  .barra-fixa { display: none; }
+
+  /* Carrinho lateral */
+  .veu { position: fixed; inset: 0; background: rgba(35, 29, 26, .45); z-index: 40; opacity: 0; pointer-events: none; transition: opacity .3s ease-out; }
+  .gaveta { position: fixed; top: 0; right: 0; bottom: 0; width: min(440px, 100%); background: var(--papel); z-index: 41; display: grid; grid-template-rows: auto auto 1fr auto;
+    transform: translateX(100%); visibility: hidden; transition: transform .45s cubic-bezier(.16, 1, .3, 1), visibility 0s .45s; }
+  .aberto .veu { opacity: 1; pointer-events: auto; }
+  .aberto .gaveta { transform: none; visibility: visible; transition: transform .45s cubic-bezier(.16, 1, .3, 1); box-shadow: -12px 0 40px rgba(35, 29, 26, .18); }
+  .gaveta > header { display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; border-bottom: 1px solid var(--fio); }
+  .gaveta > header h2 { font-size: 1.4rem; }
+  .gaveta > header button { background: none; border: 0; padding: 6px; }
+  .metas { padding: 18px 24px; display: grid; gap: 14px; border-bottom: 1px solid var(--fio); font-size: .9rem; }
+  .meta p b { font-weight: 700; }
+  .progresso { height: 6px; border-radius: 3px; background: var(--fio); margin-top: 8px; overflow: hidden; }
+  .progresso i { display: block; height: 100%; width: var(--p); background: var(--verde); border-radius: 3px; }
+  .itens { overflow-y: auto; padding: 8px 24px; }
+  .item { display: grid; grid-template-columns: 76px 1fr auto; gap: 14px; padding: 16px 0; border-bottom: 1px solid var(--fio); font-size: .9rem; }
+  .item img { width: 76px; height: 92px; object-fit: cover; border-radius: 4px; }
+  .item b { display: block; font-size: .95rem; }
+  .item span { color: var(--tinta-2); }
+  .item .mini-qtd { display: inline-flex; gap: 14px; border: 1px solid var(--fio); border-radius: 20px; padding: 4px 12px; margin-top: 8px; color: var(--tinta); }
+  .sugestao { margin: 18px 0 8px; display: grid; grid-template-columns: 56px 1fr auto; gap: 12px; align-items: center; background: var(--la); padding: 12px; border-radius: var(--raio); font-size: .88rem; }
+  .sugestao img { width: 56px; height: 56px; object-fit: cover; border-radius: 4px; }
+  .sugestao button { border: 1.5px solid var(--tinta); background: transparent; border-radius: 18px; padding: 6px 12px; font-weight: 600; font-size: .82rem; }
+  .presente { display: flex; gap: 10px; align-items: start; font-size: .9rem; padding: 14px 0; }
+  .presente input { width: 18px; height: 18px; accent-color: var(--framboesa); margin-top: 2px; }
+  .gaveta > footer { padding: 18px 24px 24px; border-top: 1px solid var(--fio); display: grid; gap: 12px; background: #fff; }
+  .total { display: flex; justify-content: space-between; font-size: 1.05rem; }
+  .total b { font-size: 1.2rem; }
+  .seguro { display: flex; gap: 8px; align-items: center; justify-content: center; font-size: .82rem; color: var(--tinta-2); }
+  .seguro .ico { width: 16px; height: 16px; }
+
+  @media (max-width: 900px) {
+    .trilha { display: none; }
+    .produto { grid-template-columns: 1fr; gap: 20px; padding-bottom: 40px; }
+    .produto > .galeria-wrap { margin-inline: -16px; }
+    .galeria { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 0; scrollbar-width: none; }
+    .galeria img, .galeria img:first-child { flex: 0 0 100%; aspect-ratio: 1 / 1; border-radius: 0; scroll-snap-align: start; }
+    .pontos { display: flex; justify-content: center; gap: 6px; margin-top: 10px; }
+    .pontos i { width: 6px; height: 6px; border-radius: 50%; background: var(--fio); }
+    .pontos i:first-child { background: var(--tinta); width: 18px; border-radius: 3px; }
+    .info { position: static; gap: 20px; }
+    .compra { grid-template-columns: 104px 1fr; }
+    .avis-produto { grid-template-columns: 1fr; gap: 24px; }
+    .barra-fixa { display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; background: rgba(251, 247, 242, .97); border-top: 1px solid var(--fio);
+      padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); gap: 12px; align-items: center; }
+    .barra-fixa div { flex: 1; font-size: .85rem; line-height: 1.3; }
+    .barra-fixa div b { display: block; font-size: 1rem; }
+    .barra-fixa .btn { min-height: 48px; padding: 0 20px; }
+    body { padding-bottom: 72px; }
+  }
+</style>
+</head>
+<body>
+<script src="comum.js"></script>
+<script>document.write(cabecalho("chaussettes"))</script>
+<main class="miolo">
+  <nav class="trilha" aria-label="Fil d’Ariane"><a href="accueil.html">Accueil</a> / <a href="collection.html">Chaussettes</a> / LASKA</nav>
+  <section class="produto">
+    <div class="galeria-wrap">
+      <div class="galeria" id="galeria"></div>
+      <div class="pontos" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
+    <div class="info">
+      <div>
+        <script>document.write(estrelas(4.8, 26))</script>
+        <h1 style="margin-top:10px">LASKA</h1>
+        <p class="sub">Chaussettes mi-mollet en laine recyclée</p>
+      </div>
+      <div class="preco-grande num">25 € <small data-d="D3">22,50 € la paire dès 3 paires</small></div>
+
+      <div>
+        <div class="rotulo"><span>Couleur : <b id="nome-cor">Chiné Bleu atlantique</b></span></div>
+        <div class="amostras" id="amostras"></div>
+      </div>
+      <div>
+        <div class="rotulo"><span>Taille : <b>39/41</b></span><a href="#">Guide des tailles</a></div>
+        <div class="tamanhos">
+          <button>36/38</button><button aria-pressed="true">39/41</button><button>42/44</button><button disabled title="Épuisée">45/47</button>
+        </div>
+        <p class="dica">Entre deux tailles ? Prenez la plus petite : la laine épouse le pied.</p>
+      </div>
+
+      <div class="compra">
+        <div class="qtd"><button aria-label="Moins">−</button><span class="num">1</span><button aria-label="Plus">+</button></div>
+        <a class="btn" href="?panier=1" onclick="document.body.classList.add('aberto');return false">Ajouter au panier · 25 €</a>
+      </div>
+
+      <div class="sob-botao">
+        <script>document.write(`
+          <p data-d="D1">${ICONE.caminhao}<span>Livraison offerte dès ${REGRAS.freteGratis} € · expédiée sous 2 à 4 jours</span></p>
+          <p data-d="D11">${ICONE.reciclar}<span>Étiquette retour offerte : renvoyez-nous vos vieilles chaussettes</span></p>
+          <p data-d="D12">${ICONE.devolver}<span>Échange gratuit sous 30 jours, 60 jours pour Noël</span></p>`)</script>
+      </div>
+
+      <div class="impacto-linha" data-d="D5"><script>document.write(ICONE.coracao)</script>
+        <p><b>Cette paire fait vivre l’atelier solidaire.</b> Les ventes financent l’association Chaussettes Solidaires et ses ateliers pour des femmes éloignées de l’emploi.</p></div>
+
+      <div>
+        <details open><summary>Description</summary><div>
+          <p>Les LASKA sont un basique de l’hiver, mais pas ordinaire : elles sont tricotées avec le fil de vos anciennes chaussettes, auquel nous avons ajouté de la laine… recyclée, bien sûr. Douceur et confort, longueur mi-mollet.</p>
+          <p>La laine régule l’humidité et ne retient pas les odeurs. Côtes résistantes à l’usure.</p></div></details>
+        <details><summary>Composition et entretien</summary><div>
+          <p>100 % recyclé : 50 % fil de chaussettes recyclées, 50 % laine recyclée.</p><p>Lavage en machine à 30 °C.</p></div></details>
+        <details><summary>Fabrication</summary><div>
+          <p>Chaussettes collectées en France, triées par un atelier d’insertion, filées dans le Sud-Ouest et tricotées en France.</p></div></details>
+        <details><summary>Livraison et retours</summary><div>
+          <p>Expédition sous 2 à 4 jours avec suivi. Livraison offerte dès 60 € en France métropolitaine.</p></div></details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<section class="secao secao-la">
+  <div class="miolo">
+    <div class="titulo-secao"><div><h2>Pour aller avec</h2><p>Complétez la paire, et profitez de la remise dès 3 articles.</p></div></div>
+    <div class="grade" id="junto"></div>
+  </div>
+</section>
+
+<section class="secao">
+  <div class="miolo avis-produto">
+    <div class="resumo-avis">
+      <h2>Avis clients</h2>
+      <span class="grande">4,8</span>
+      <script>document.write(estrelas(4.8, 26))</script>
+      <a class="btn btn-claro" href="#" style="margin-top:8px">Écrire un avis</a>
+    </div>
+    <div class="lista-avis">
+      <article><header><b>Florence N. · achat vérifié</b><span>27/12/2021</span></header><script>document.write(estrelas(5, 0, true).replace("(0)", ""))</script>
+        <p>Belle idée, beau produit, site clair et livraison express, cerise sur le gâteau, l’enveloppe retour de chaussettes orphelines. Que du positif ! Merci</p></article>
+      <article><header><b>Sarah L. · achat vérifié</b><span>11/01/2022</span></header><script>document.write(estrelas(5, 0, true).replace("(0)", ""))</script>
+        <p>Commande livrée très rapidement, tout s’est très bien passé, les chaussettes sont chaudes et moelleuses.</p></article>
+      <article><header><b>Madeleine R. · achat vérifié</b><span>07/02/2022</span></header><script>document.write(estrelas(4, 0, true).replace("(0)", ""))</script>
+        <p>Chaussettes assez lâches et sensation de chaussettes trop grandes. Mais peut-être parce que l’on n’a pas l’habitude des chaussettes en laine.</p></article>
+    </div>
+  </div>
+</section>
+
+<div class="barra-fixa"><div><b>LASKA · 25 €</b>Bleu atlantique · 39/41</div><a class="btn" href="?panier=1" onclick="document.body.classList.add('aberto');return false">Ajouter au panier</a></div>
+
+<div class="veu" onclick="document.body.classList.remove('aberto')"></div>
+<aside class="gaveta" aria-label="Panier">
+  <header><h2>Votre panier (2)</h2><button aria-label="Fermer" onclick="document.body.classList.remove('aberto')"><script>document.write(ICONE.fechar)</script></button></header>
+  <div class="metas">
+    <div class="meta" data-d="D1"><p>Plus que <b>6 €</b> pour la livraison offerte</p><div class="progresso"><i style="--p:90%"></i></div></div>
+    <div class="meta" data-d="D3"><p>Ajoutez <b>1 paire</b> : −10 % sur tout le panier</p><div class="progresso"><i style="--p:66%"></i></div></div>
+  </div>
+  <div class="itens">
+    <div class="item"><script>document.write(`<img src="${img(PRODUTOS.laska.fotos[0], 200)}" alt="">`)</script><div><b>LASKA</b><span>Chiné Bleu atlantique · 39/41</span><br><span class="mini-qtd">− &nbsp;1&nbsp; +</span></div><span class="preco">25 €</span></div>
+    <div class="item"><script>document.write(`<img src="${img(PRODUTOS.toundra.fotos[0], 200)}" alt="">`)</script><div><b>TOUNDRA</b><span>Chiné Bordeaux · 36/38</span><br><span class="mini-qtd">− &nbsp;1&nbsp; +</span></div><span class="preco">29 €</span></div>
+    <div class="sugestao"><script>document.write(`<img src="${img(PRODUTOS.summer.fotos[0], 120)}" alt="">`)</script><div><b>SUMMER</b> · 17 €<br><span style="color:var(--tinta-2)">La 3<sup>e</sup> paire déclenche la remise</span></div><button>Ajouter</button></div>
+    <label class="presente" data-d="D2"><input type="checkbox"> <span><b>C’est pour offrir</b><br><span style="color:var(--tinta-2)">Emballage cadeau et carte « Vos chaussettes ont une histoire », offerts.</span></span></label>
+  </div>
+  <footer>
+    <div class="total"><span>Sous-total</span><b class="num">54,00 €</b></div>
+    <a class="btn btn-largo" href="#">Passer commande</a>
+    <p class="seguro"><script>document.write(ICONE.cadeado)</script>Paiement sécurisé · livraison calculée à l’étape suivante</p>
+  </footer>
+</aside>
+
+<script>
+  document.write(rodape());
+  const fotos = ["products/DSC5147_crop_16.jpg?v=1602491893", "products/DSC5178_resize_89.jpg?v=1715613743", "products/DSC5188_crop_60.jpg?v=1715613743",
+    "products/DSC01514-1_resize_53.jpg?v=1715613743", "products/IMG_20201012_103552_resize_63.jpg?v=1602491893"];
+  document.getElementById("galeria").innerHTML = fotos.map((f, i) => `<img src="${img(f, i ? 700 : 1200)}" alt="Chaussettes LASKA, photo ${i + 1}">`).join("");
+  document.getElementById("amostras").innerHTML = CORES_LA.map(c => `<button style="background:${COR[c]}" title="${c}" aria-label="${c}" aria-pressed="${c === "Chiné Bleu atlantique"}" onclick="document.getElementById('nome-cor').textContent='${c}';this.parentNode.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b===this))"></button>`).join("");
+  document.getElementById("junto").innerHTML = ["toundra", "bonnet", "mitaines", "echarpe"].map(id => cartao(id)).join("");
+  if (new URLSearchParams(location.search).get("panier") === "1") document.body.classList.add("aberto");
+</script>
+</body>
+</html>

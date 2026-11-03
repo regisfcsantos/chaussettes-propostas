@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Accueil · maquette Chaussettes Orphelines</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="loja.css">
+<style>
+  main { display: flex; flex-direction: column; }
+  /* Versão A: vitrine primeiro. Versão B (?v=b): missão primeiro. */
+  .hero-a { display: grid; grid-template-columns: 5fr 7fr; min-height: 620px; background: var(--la); }
+  .hero-a .texto { align-self: center; padding: 56px clamp(24px, 5vw, 80px); display: grid; gap: 22px; max-width: 640px; justify-self: end; }
+  .hero-a .texto p { font-size: 1.12rem; color: var(--tinta-2); max-width: 44ch; }
+  .hero-a .foto { position: relative; overflow: hidden; }
+  .hero-a .foto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%; }
+  .acoes { display: flex; gap: 12px; flex-wrap: wrap; }
+  .legenda-foto { position: absolute; left: 20px; bottom: 20px; background: var(--papel); border-radius: 30px; padding: 8px 14px; font-size: .82rem; font-weight: 500;
+    box-shadow: 0 6px 20px rgba(35, 29, 26, .18); }
+  .legenda-foto b { font-weight: 700; }
+
+  .hero-b { display: none; position: relative; min-height: 640px; color: #fff; overflow: hidden; }
+  .hero-b img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 35%; }
+  .hero-b::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(25, 18, 15, .78) 0%, rgba(25, 18, 15, .45) 45%, rgba(25, 18, 15, 0) 75%); }
+  .hero-b .miolo { position: relative; z-index: 1; display: grid; gap: 22px; align-content: center; min-height: 640px; }
+  .hero-b h1 { max-width: 15ch; }
+  .hero-b p { font-size: 1.15rem; max-width: 42ch; color: #f3ebe1; }
+  .hero-b .btn-claro { color: #fff; box-shadow: inset 0 0 0 1.5px #fff; }
+  .hero-b .btn-claro:hover { background: #fff; color: var(--tinta); }
+  .hero-b .estrelas, .hero-b .estrelas b, .hero-b .estrelas .e { color: #fff; }
+
+  .faixa-impacto { display: none; background: var(--tinta); color: #f3ebe1; }
+  .faixa-impacto .miolo { display: flex; justify-content: space-between; gap: 24px; padding-block: 26px; align-items: baseline; flex-wrap: wrap; }
+  .faixa-impacto span { font-size: .95rem; }
+  .faixa-impacto b { font-family: var(--serif); font-size: 1.7rem; font-weight: 600; color: #fff; margin-right: 8px; }
+
+  body.v-b .hero-a { display: none; }
+  body.v-b .hero-b { display: block; }
+  body.v-b .faixa-impacto { display: block; }
+  body.v-b .s-pack { display: none; }
+  body.v-b .s-impacto { order: 9; }
+
+  .pack { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(32px, 6vw, 96px); align-items: center; }
+  .pack .texto { display: grid; gap: 18px; }
+  .pack .texto p { color: var(--tinta-2); max-width: 46ch; }
+  .pack-fotos { display: grid; grid-template-columns: 1.2fr 1fr; grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 12px; aspect-ratio: 5 / 4; }
+  .pack-fotos img { width: 100%; height: 100%; object-fit: cover; border-radius: var(--raio); }
+  .pack-fotos img:first-child { grid-row: span 2; }
+
+  .coffrets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .coffret { display: grid; gap: 10px; text-decoration: none; }
+  .coffret .foto { position: relative; aspect-ratio: 5 / 4; overflow: hidden; border-radius: var(--raio); }
+  .coffret .foto img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s cubic-bezier(.16, 1, .3, 1); }
+  .coffret:hover .foto img { transform: scale(1.03); }
+  .coffret h3 { font-size: 1.35rem; }
+  .coffret p { color: var(--tinta-2); font-size: .95rem; }
+  .coffret .preco { font-size: 1.05rem; }
+  .nota-coffret { margin-top: 28px; display: flex; gap: 12px; align-items: center; color: var(--tinta-2); font-size: .95rem; }
+  .nota-coffret .ico { color: var(--framboesa); flex: none; }
+
+  .boucle { display: grid; grid-template-columns: 1fr 1.4fr; gap: clamp(32px, 6vw, 96px); align-items: center; }
+  .boucle .intro { display: grid; gap: 18px; }
+  .boucle .intro p { color: var(--tinta-2); max-width: 44ch; }
+  .etapas { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; counter-reset: e; }
+  .etapas li { counter-increment: e; display: grid; grid-template-columns: 56px 1fr; gap: 18px; padding-bottom: 28px; position: relative; }
+  .etapas li::before { content: counter(e); width: 56px; height: 56px; border-radius: 50%; border: 1.5px solid var(--tinta); display: grid; place-items: center;
+    font-family: var(--serif); font-size: 1.4rem; background: var(--papel); position: relative; z-index: 1; }
+  .etapas li:not(:last-child)::after { content: ""; position: absolute; left: 27px; top: 56px; bottom: 0; border-left: 1.5px dashed var(--tinta-2); }
+  .etapas li:last-child::before { background: var(--verde); color: #fff; border-color: var(--verde); }
+  .etapas b { display: block; font-size: 1.08rem; margin: 6px 0 4px; }
+  .etapas span { color: var(--tinta-2); }
+
+  .impacto { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(32px, 6vw, 96px); align-items: center; }
+  .impacto .foto img { width: 100%; aspect-ratio: 4 / 3.4; object-fit: cover; border-radius: var(--raio); }
+  .impacto .texto { display: grid; gap: 22px; }
+  .impacto .frase { font-family: var(--serif); font-size: clamp(1.5rem, 2.4vw, 2.1rem); line-height: 1.3; }
+  .impacto .frase em { font-style: italic; color: var(--framboesa); }
+  .numeros { display: grid; gap: 14px; border-top: 1px solid var(--fio); padding-top: 22px; }
+  .numeros p { display: flex; gap: 14px; align-items: baseline; }
+  .numeros b { font-family: var(--serif); font-size: 1.6rem; font-weight: 600; min-width: 5.2ch; }
+  .numeros span { color: var(--tinta-2); }
+
+  .avis-topo { display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap; }
+  .avis-topo .grande { font-family: var(--serif); font-size: 3.4rem; line-height: 1; }
+  .avis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 36px; }
+  .avis blockquote { margin: 0; padding: 28px; background: var(--papel); border-radius: var(--raio); display: grid; gap: 16px; align-content: start; }
+  .avis blockquote p { font-family: var(--serif); font-size: 1.12rem; line-height: 1.45; }
+  .avis footer { font-size: .88rem; color: var(--tinta-2); }
+  .avis footer b { color: var(--tinta); }
+
+  @media (max-width: 900px) {
+    .hero-a { grid-template-columns: 1fr; min-height: 0; }
+    .hero-a .foto { order: -1; aspect-ratio: 1 / 1; }
+    .hero-a .texto { padding: 28px 20px 36px; justify-self: stretch; gap: 16px; }
+    .hero-a .texto p { font-size: 1rem; }
+    .acoes .btn { flex: 1 1 100%; }
+    .hero-b, .hero-b .miolo { min-height: 620px; }
+    .hero-b .miolo { align-content: end; padding-bottom: 36px; }
+    .hero-b::after { background: linear-gradient(0deg, rgba(25, 18, 15, .85) 0%, rgba(25, 18, 15, .4) 55%, rgba(25, 18, 15, 0) 85%); }
+    .faixa-impacto .miolo { display: grid; grid-template-columns: 1fr; gap: 6px; padding-block: 20px; }
+    .faixa-impacto b { font-size: 1.35rem; }
+    .pack, .boucle, .impacto { grid-template-columns: 1fr; }
+    .pack-fotos { order: -1; }
+    .coffrets { grid-template-columns: 82%; grid-auto-flow: column; grid-auto-columns: 82%; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; margin-inline: -16px; padding-inline: 16px; }
+    .coffret { scroll-snap-align: start; }
+    .avis { grid-template-columns: 1fr; }
+    .avis blockquote:nth-child(3) { display: none; }
+  }
+</style>
+</head>
+<body>
+<script src="comum.js"></script>
+<script>
+  if (new URLSearchParams(location.search).get("v") === "b") document.body.classList.add("v-b");
+  document.write(cabecalho());
+</script>
+<main>
+  <!-- Versão A: produto e preço na primeira tela -->
+  <section class="hero-a">
+    <div class="texto">
+      <script>document.write(estrelas(4.6, 201))</script>
+      <h1>Des chaussettes chaudes, tricotées avec vos vieilles chaussettes.</h1>
+      <p>Fil recyclé et laine recyclée, fabriquées en France. Chaque paire fait vivre l’atelier solidaire de l’association Chaussettes Solidaires.</p>
+      <div class="acoes"><a class="btn" href="collection.html">Choisir mes chaussettes</a><a class="btn btn-claro" href="#coffrets">Coffrets cadeaux</a></div>
+    </div>
+    <div class="foto">
+      <script>document.write(`<img src="${img("products/IMG_20201012_103552_resize_63.jpg?v=1602491893", 1400)}" alt="Quatre personnes assises portent les chaussettes LASKA en laine recyclée">`)</script>
+      <a class="legenda-foto" href="produit.html"><b>LASKA</b> · mi-mollet · 25 €</a>
+    </div>
+  </section>
+
+  <!-- Versão B: missão na primeira tela -->
+  <section class="hero-b">
+    <script>document.write(`<img src="${img("products/DSC5226_crop_80.jpg?v=1701013770", 1800)}" alt="Trois jeunes femmes portent les chaussettes hautes TOUNDRA">`)</script>
+    <div class="miolo">
+      <script>document.write(estrelas(4.6, 201))</script>
+      <h1>Vos vieilles chaussettes ont une seconde vie. Et des femmes, un nouveau départ.</h1>
+      <p>Depuis 2008, nous recyclons les chaussettes en fil neuf, tricoté en France. Les ventes financent l’atelier d’insertion de l’association, à Paris.</p>
+      <div class="acoes"><a class="btn" href="collection.html">Découvrir les chaussettes</a><a class="btn btn-claro" href="#impacto">Notre histoire</a></div>
+    </div>
+  </section>
+  <section class="faixa-impacto" data-d="D5 · números"><div class="miolo">
+    <span><b>2008</b>des chaussettes recyclées depuis</span>
+    <span><b>35 t</b>de chaussettes collectées</span>
+    <span><b>≈ 200</b>femmes formées à l’atelier</span>
+    <span><b>100 %</b>fabriqué en France</span>
+  </div></section>
+
+  <script>document.write(garantias())</script>
+
+  <section class="secao">
+    <div class="miolo">
+      <div class="titulo-secao"><div><h2>Les plus aimées</h2><p>Nos chaussettes en laine recyclée pour l’hiver, et celles que vous recommandez depuis des années.</p></div><a class="link-seta" href="collection.html">Toutes les chaussettes</a></div>
+      <div class="grade" id="vitrine"></div>
+    </div>
+  </section>
+
+  <section class="secao secao-la s-pack">
+    <div class="miolo pack">
+      <div class="texto">
+        <h2>Composez votre pack, la remise se fait toute seule.</h2>
+        <p>Mélangez les modèles, les couleurs et les tailles. Dès 3 paires, la remise s’applique dans le panier.</p>
+        <script>document.write(regua(1))</script>
+        <div class="acoes"><a class="btn" href="collection.html">Je compose mon pack</a></div>
+      </div>
+      <div class="pack-fotos">
+        <script>document.write(`<img src="${img("files/Pack-SUMMER.jpg?v=1701020596", 900)}" alt="Pile de quatre paires SUMMER">
+          <img src="${img("products/parisbicoloreGR.jpg?v=1618825857", 500)}" alt="Chaussettes PARIS bicolores">
+          <img src="${img("products/boucletteG.jpg?v=1589968391", 500)}" alt="Chaussettes-chaussons SLOWER">`)</script>
+      </div>
+    </div>
+  </section>
+
+  <section class="secao" id="coffrets" data-d="D2 · kits de Natal">
+    <div class="miolo">
+      <div class="titulo-secao"><div><h2>Coffrets de Noël</h2><p>Prêts à offrir, avec une carte qui raconte d’où viennent les chaussettes.</p></div><a class="link-seta" href="#">Tous les coffrets</a></div>
+      <div class="coffrets" id="lista-coffrets"></div>
+      <p class="nota-coffret" data-d="datas a confirmar"><script>document.write(ICONE.presente)</script>Commandez avant le 18 décembre pour une livraison avant Noël. Échange possible jusqu’au 31 janvier.</p>
+    </div>
+  </section>
+
+  <section class="secao secao-la" data-d="D11 · etiqueta de devolução">
+    <div class="miolo boucle">
+      <div class="intro">
+        <h2>Renvoyez-nous vos chaussettes orphelines. C’est gratuit.</h2>
+        <p>Avec chaque commande, vous recevez une étiquette retour prépayée. Vos vieilles chaussettes deviennent le fil de nos prochaines paires.</p>
+        <a class="link-seta" href="#">Comment ça marche</a>
+      </div>
+      <ol class="etapas">
+        <li><div><b>Vous commandez</b><span>Des chaussettes, un bonnet ou un coffret.</span></div></li>
+        <li><div><b>Vous recevez l’étiquette retour</b><span>Dans le colis, avec votre commande.</span></div></li>
+        <li><div><b>Vous renvoyez jusqu’à 500 g de chaussettes</b><span>Dans la même enveloppe, depuis n’importe quelle boîte aux lettres.</span></div></li>
+        <li><div><b>Elles redeviennent du fil</b><span>Triées par l’atelier d’insertion, filées dans le Sud-Ouest, tricotées en France.</span></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="secao s-impacto" id="impacto">
+    <div class="miolo impacto">
+      <div class="foto"><script>document.write(`<img src="${img("products/20200930_172802_crop_43.jpg?v=1602499577", 1100)}" alt="Chaussettes CANCAN portées dans un café parisien">`)</script></div>
+      <div class="texto">
+        <p class="frase">Chaussettes Orphelines est la marque de l’association Chaussettes Solidaires. <em>Vos achats financent</em> des ateliers pour des femmes en situation d’isolement social et éloignées de l’emploi.</p>
+        <div class="numeros" data-d="D5 · números">
+          <p><b>35 t</b><span>de chaussettes collectées et recyclées</span></p>
+          <p><b>≈ 200</b><span>femmes formées à l’atelier depuis 6 ans</span></p>
+          <p><b>2008</b><span>l’année où tout a commencé</span></p>
+        </div>
+        <a class="link-seta" href="#">Découvrir l’association</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="secao secao-la">
+    <div class="miolo">
+      <div class="avis-topo"><span class="grande">4,6/5</span><script>document.write(estrelas(4.6, 201))</script></div>
+      <div class="avis">
+        <blockquote><p>« Belle idée, beau produit, site clair et livraison express. Cerise sur le gâteau, l’enveloppe retour de chaussettes orphelines. Que du positif ! »</p><footer><b>Florence N.</b> · LASKA · achat vérifié</footer></blockquote>
+        <blockquote><p>« Voici ma 3ème paire de chaussettes achetée chez Chaussettes Orphelines. Je suis toujours aussi fan ! Confortables, résistantes et belles. »</p><footer><b>Céline L.</b> · TOUNDRA · achat vérifié</footer></blockquote>
+        <blockquote><p>« N’achetant pratiquement plus de vêtements neufs, les chaussettes étaient un article me posant problème. Merci pour cette solution responsable. »</p><footer><b>Stéphanie W.</b> · FUNNY LIN · achat vérifié</footer></blockquote>
+      </div>
+    </div>
+  </section>
+</main>
+<script>
+  document.write(rodape());
+  document.getElementById("vitrine").innerHTML = ["laska", "toundra", "summer", "funny", "cancan", "paris", "bonnet", "mitaines"].map(id => cartao(id)).join("");
+  document.getElementById("lista-coffrets").innerHTML = COFFRETS.map(c => `<a class="coffret" href="#">
+    <div class="foto"><span class="selo economia">−${euro(c.de - c.preco)}</span><img src="${img(c.foto, 900)}" alt="${c.nome}" loading="lazy"></div>
+    <h3>${c.nome}</h3><p>${c.conteudo}</p><span class="preco">${euro(c.preco)}<s>${euro(c.de)}</s></span></a>`).join("");
+</script>
+</body>
+</html>

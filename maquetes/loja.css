@@ -1,0 +1,170 @@
+/* Maquetes da loja Chaussettes Orphelines: base comum (cores, letras, componentes).
+   Fontes: Playfair Display (a das placas e do pôster) e DM Sans. As duas existem na biblioteca de fontes do Shopify,
+   então o tema final não precisa carregar nada de fora. */
+:root {
+  --papel: #fbf7f2;
+  --la: #f3ebe1;          /* bege « laine » para fundos de seção */
+  --tinta: #231d1a;
+  --tinta-2: #5f534c;     /* texto secundário: 7:1 sobre o papel */
+  --coral: #f26d6d;       /* o coral da marca, só com texto escuro por cima */
+  --framboesa: #a3303e;   /* botões: texto branco a 7:1 */
+  --framboesa-escura: #86252f;
+  --fio: #e3d7c9;
+  --verde: #2e5a4c;       /* selo « recyclé » */
+  --serif: "Playfair Display", Georgia, serif;
+  --sans: "DM Sans", system-ui, sans-serif;
+  --raio: 6px;
+  --largura: 1320px;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body { margin: 0; background: var(--papel); color: var(--tinta); font: 400 16px/1.55 var(--sans); }
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+button { font: inherit; color: inherit; cursor: pointer; }
+::selection { background: var(--coral); color: var(--tinta); }
+:focus-visible { outline: 2px solid var(--framboesa); outline-offset: 3px; border-radius: 2px; }
+h1, h2, h3 { font-family: var(--serif); font-weight: 600; line-height: 1.12; letter-spacing: -0.01em; margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(2.1rem, 4.2vw, 3.6rem); }
+h2 { font-size: clamp(1.6rem, 2.8vw, 2.4rem); }
+h3 { font-size: 1.25rem; }
+p { margin: 0; }
+.num { font-variant-numeric: tabular-nums; }
+.miolo { max-width: var(--largura); margin: 0 auto; padding: 0 clamp(16px, 4vw, 48px); }
+.secao { padding: clamp(56px, 8vw, 104px) 0; }
+.secao-la { background: var(--la); }
+.titulo-secao { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 32px; }
+.titulo-secao p { color: var(--tinta-2); max-width: 46ch; margin-top: 10px; }
+.link-seta { font-weight: 600; white-space: nowrap; text-decoration: underline; }
+
+/* ---------- Botões ---------- */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 52px; padding: 0 28px;
+  border: 0; border-radius: var(--raio); background: var(--framboesa); color: #fff; font-weight: 600; font-size: 1rem;
+  text-decoration: none; transition: background .2s ease-out, transform .2s ease-out; }
+.btn:hover { background: var(--framboesa-escura); }
+.btn:active { transform: translateY(1px); }
+.btn-claro { background: transparent; color: var(--tinta); box-shadow: inset 0 0 0 1.5px var(--tinta); }
+.btn-claro:hover { background: var(--tinta); color: var(--papel); }
+.btn-largo { width: 100%; }
+
+/* ---------- Barra de anúncio e cabeçalho ---------- */
+.anuncio { background: var(--coral); color: var(--tinta); font-size: .85rem; font-weight: 500; text-align: center; padding: 9px 16px; }
+.anuncio b { font-weight: 700; }
+.anuncio .sep { margin: 0 14px; opacity: .5; }
+.cabecalho { position: sticky; top: 0; z-index: 20; background: rgba(251, 247, 242, .96); border-bottom: 1px solid var(--fio); }
+.cabecalho .miolo { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 32px; height: 76px; }
+.logo img { height: 46px; width: auto; }
+.menu { display: flex; gap: 28px; font-size: .95rem; font-weight: 500; }
+.menu a { text-decoration: none; padding: 6px 0; border-bottom: 1.5px solid transparent; }
+.menu a:hover { border-color: var(--tinta); }
+.menu .destaque { color: var(--framboesa); font-weight: 700; }
+.icones { display: flex; gap: 18px; align-items: center; }
+.icones a { display: grid; place-items: center; width: 36px; height: 36px; position: relative; }
+.icones svg, .ico { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.contador { position: absolute; top: 0; right: -2px; min-width: 18px; height: 18px; border-radius: 9px; background: var(--framboesa); color: #fff;
+  font-size: 11px; font-weight: 700; display: grid; place-items: center; padding: 0 4px; }
+.so-celular { display: none !important; }
+
+/* ---------- Estrelas ---------- */
+.estrelas { display: inline-flex; align-items: center; gap: 6px; font-size: .88rem; color: var(--tinta-2); }
+.estrelas .e { display: inline-flex; gap: 1px; color: var(--tinta); }
+.estrelas svg { width: 14px; height: 14px; fill: currentColor; stroke: none; }
+.estrelas b { color: var(--tinta); font-weight: 600; }
+
+/* ---------- Faixa de garantias ---------- */
+.garantias { border-bottom: 1px solid var(--fio); }
+.garantias ul { list-style: none; margin: 0 auto; padding: 18px clamp(16px, 4vw, 48px); max-width: var(--largura);
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.garantias li { display: flex; align-items: center; gap: 12px; font-size: .9rem; line-height: 1.3; }
+.garantias li b { display: block; font-weight: 600; }
+.garantias li span { color: var(--tinta-2); }
+.garantias .ico { flex: none; width: 26px; height: 26px; color: var(--verde); }
+
+/* ---------- Cartão de produto ---------- */
+.grade { display: grid; grid-template-columns: repeat(4, 1fr); gap: 36px 24px; }
+.cartao { position: relative; display: flex; flex-direction: column; gap: 6px; }
+.cartao .foto { position: relative; aspect-ratio: 4 / 5; overflow: hidden; border-radius: var(--raio); background: var(--la); }
+.cartao .foto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity .35s ease-out, transform .6s cubic-bezier(.16, 1, .3, 1); }
+.cartao .foto img + img { opacity: 0; }
+.cartao:hover .foto img + img { opacity: 1; }
+.cartao:hover .foto img { transform: scale(1.03); }
+.selo { position: absolute; top: 10px; left: 10px; z-index: 2; background: var(--papel); color: var(--tinta); font-size: .75rem; font-weight: 600;
+  padding: 4px 9px; border-radius: 20px; }
+.selo.economia { background: var(--framboesa); color: #fff; }
+.adicionar { position: absolute; right: 10px; bottom: 10px; z-index: 2; height: 40px; padding: 0 16px; border: 0; border-radius: 20px;
+  background: var(--papel); font-weight: 600; font-size: .85rem; box-shadow: 0 4px 14px rgba(35, 29, 26, .15);
+  opacity: 0; transform: translateY(6px); transition: opacity .25s ease-out, transform .25s ease-out; }
+.cartao:hover .adicionar, .adicionar:focus-visible { opacity: 1; transform: none; }
+.cartao h3 { font-family: var(--sans); font-size: 1rem; font-weight: 700; letter-spacing: .02em; margin-top: 8px; }
+.cartao h3 a { text-decoration: none; }
+.cartao h3 a::after { content: ""; position: absolute; inset: 0; }
+.cartao .tipo { color: var(--tinta-2); font-size: .88rem; }
+.cartao .linha { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 2px; }
+.preco { font-weight: 700; font-variant-numeric: tabular-nums; }
+.preco s { font-weight: 400; color: var(--tinta-2); margin-left: 6px; }
+.cores { display: flex; gap: 5px; }
+.cores i { width: 13px; height: 13px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .15); }
+.cores small { font-size: .78rem; color: var(--tinta-2); margin-left: 2px; }
+
+/* ---------- Régua de desconto por quantidade ---------- */
+.regua { display: grid; grid-template-columns: repeat(3, 1fr); border: 1.5px solid var(--tinta); border-radius: var(--raio); overflow: hidden; }
+.regua div { padding: 14px 16px; text-align: center; border-left: 1.5px solid var(--tinta); }
+.regua div:first-child { border-left: 0; }
+.regua b { display: block; font-family: var(--serif); font-size: 1.35rem; }
+.regua span { font-size: .85rem; color: var(--tinta-2); }
+.regua .ativo { background: var(--tinta); color: var(--papel); }
+.regua .ativo span { color: #e9dfd4; }
+
+/* ---------- Rodapé ---------- */
+.rodape { background: var(--tinta); color: #eae2d8; padding: 64px 0 32px; font-size: .92rem; }
+.rodape .miolo { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 40px; }
+.rodape h4 { font-family: var(--serif); font-weight: 600; font-size: 1.1rem; margin: 0 0 14px; color: #fff; }
+.rodape ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.rodape a { text-decoration: none; }
+.rodape a:hover { text-decoration: underline; }
+.rodape .base { grid-column: 1 / -1; border-top: 1px solid #4a403b; padding-top: 22px; margin-top: 16px; display: flex; justify-content: space-between; color: #c9bdb1; font-size: .82rem; }
+.newsletter-form { display: flex; gap: 8px; margin-top: 14px; }
+.newsletter-form input { flex: 1; min-width: 0; height: 48px; border-radius: var(--raio); border: 1px solid #6b5f58; background: transparent; color: #fff; padding: 0 14px; font: inherit; }
+.newsletter-form input::placeholder { color: #b7aaa0; }
+.newsletter-form .btn { min-height: 48px; padding: 0 18px; }
+
+/* ---------- Acordeão ---------- */
+details { border-top: 1px solid var(--fio); }
+details:last-of-type { border-bottom: 1px solid var(--fio); }
+summary { list-style: none; cursor: pointer; padding: 18px 0; font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
+summary::-webkit-details-marker { display: none; }
+summary::after { content: ""; width: 10px; height: 10px; border-right: 1.5px solid; border-bottom: 1.5px solid; transform: rotate(45deg) translateY(-3px); transition: transform .2s; }
+details[open] summary::after { transform: rotate(225deg); }
+details > div { padding: 0 0 20px; color: var(--tinta-2); display: grid; gap: 10px; max-width: 62ch; }
+
+/* ---------- Marcações das decisões (?marcas=1) ---------- */
+.marcas [data-d] { outline: 2px dashed #d99a00; outline-offset: 2px; position: relative; }
+.marcas [data-d]::before { content: attr(data-d); position: absolute; top: -11px; right: -4px; z-index: 30; background: #ffd24d; color: #231d1a;
+  font: 700 11px/1 var(--sans); padding: 4px 6px; border-radius: 4px; white-space: nowrap; }
+
+/* ---------- Celular ---------- */
+@media (max-width: 900px) {
+  .so-pc { display: none !important; }
+  .so-celular { display: revert !important; }
+  .anuncio { font-size: .78rem; padding: 8px 12px; }
+  .anuncio .sep, .anuncio .extra { display: none; }
+  .cabecalho .miolo { grid-template-columns: 40px 1fr auto; height: 62px; gap: 8px; }
+  .logo { justify-self: center; }
+  .logo img { height: 36px; }
+  .menu { display: none; }
+  .icones { gap: 4px; }
+  .garantias ul { grid-template-columns: repeat(4, 76%); overflow-x: auto; scroll-snap-type: x mandatory; gap: 12px; padding-block: 14px; scrollbar-width: none; }
+  .garantias li { scroll-snap-align: start; }
+  .grade { grid-template-columns: repeat(2, 1fr); gap: 28px 12px; }
+  .adicionar { opacity: 1; transform: none; width: 36px; height: 36px; padding: 0; display: grid; place-items: center; right: 8px; bottom: 8px; }
+  .adicionar .txt { display: none; }
+  .cartao h3 { font-size: .92rem; }
+  .cartao .tipo { font-size: .82rem; }
+  .cartao .linha { flex-direction: column; align-items: start; gap: 4px; }
+  .titulo-secao { flex-direction: column; align-items: start; gap: 8px; margin-bottom: 24px; }
+  .rodape .miolo { grid-template-columns: 1fr 1fr; }
+  .rodape .miolo > :first-child { grid-column: 1 / -1; }
+  .rodape .base { flex-direction: column; gap: 6px; }
+  .regua b { font-size: 1.1rem; }
+  .regua div { padding: 12px 6px; }
+}

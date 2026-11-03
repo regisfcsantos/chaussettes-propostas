@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Chaussettes · maquette Chaussettes Orphelines</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="loja.css">
+<style>
+  .topo-colecao { padding: 40px 0 28px; display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: end; }
+  .topo-colecao p { color: var(--tinta-2); max-width: 56ch; margin-top: 12px; }
+  .topo-colecao .regua { width: 420px; }
+  .filtros { position: sticky; top: 76px; z-index: 10; background: var(--papel); border-block: 1px solid var(--fio); }
+  .filtros .miolo { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-block: 12px; }
+  .chips { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+  .chips button { flex: none; height: 38px; padding: 0 16px; border-radius: 19px; border: 1px solid var(--fio); background: #fff; font-size: .9rem; font-weight: 500; }
+  .chips button[aria-pressed="true"] { background: var(--tinta); color: var(--papel); border-color: var(--tinta); }
+  .ordenar { display: flex; gap: 18px; font-size: .9rem; white-space: nowrap; }
+  .ordenar button { background: none; border: 0; font-weight: 600; display: inline-flex; gap: 6px; align-items: center; }
+  .ordenar span { color: var(--tinta-2); }
+  .lista { padding: 36px 0 80px; }
+  .bloco-promo { grid-column: span 2; position: relative; border-radius: var(--raio); overflow: hidden; color: #fff; display: grid; align-content: end; min-height: 100%; text-decoration: none; }
+  .bloco-promo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .bloco-promo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(25, 18, 15, .8), rgba(25, 18, 15, 0) 60%); }
+  .bloco-promo div { position: relative; z-index: 1; padding: 28px; display: grid; gap: 10px; justify-items: start; }
+  .bloco-promo h2 { font-size: 1.9rem; }
+  .bloco-promo .btn { background: var(--papel); color: var(--tinta); min-height: 44px; }
+  @media (max-width: 900px) {
+    .topo-colecao { grid-template-columns: 1fr; padding: 24px 0 18px; }
+    .topo-colecao .regua { width: 100%; }
+    .filtros { top: 62px; }
+    .filtros .miolo { flex-direction: column; align-items: stretch; gap: 10px; }
+    .ordenar { justify-content: space-between; }
+    .lista { padding-top: 24px; }
+    .bloco-promo { min-height: 300px; }
+  }
+</style>
+</head>
+<body>
+<script src="comum.js"></script>
+<script>document.write(cabecalho("chaussettes"))</script>
+<main>
+  <div class="miolo topo-colecao">
+    <div><h1>Chaussettes</h1><p>Tricotées en France avec le fil de vos anciennes chaussettes. Mélangez les modèles : la remise se fait toute seule dans le panier.</p></div>
+    <script>document.write(regua(0))</script>
+  </div>
+  <div class="filtros"><div class="miolo">
+    <div class="chips" role="group" aria-label="Hauteur">
+      <button aria-pressed="true">Toutes (10)</button><button>Invisibles</button><button>Basses</button><button>Mi-mollet</button><button>Hautes</button><button>Mi-cuisses</button><button>Chaussons</button><button>Packs</button>
+    </div>
+    <div class="ordenar"><button>Laine · Coton · Lin</button><button>Taille</button><span>Trier : <b>Les plus aimées</b></span></div>
+  </div></div>
+  <div class="miolo lista"><div class="grade" id="grade"></div></div>
+</main>
+<script>
+  document.write(rodape());
+  const ids = ["laska", "toundra", "summer", "funny", "cancan", "paris", "slower", "funnylin"];
+  const promo = `<a class="bloco-promo" href="accueil.html#coffrets" data-d="D2">${`<img src="${img("products/DSC5226_crop_80.jpg?v=1701013770", 1000)}" alt="">`}
+    <div><h2>Coffrets de Noël</h2><p>3 paires LASKA, 67,50 € au lieu de 75 €</p><span class="btn">Voir les coffrets</span></div></a>`;
+  const cartoes = ids.map(id => cartao(id));
+  cartoes.splice(4, 0, promo);
+  document.getElementById("grade").innerHTML = cartoes.join("")
+    + cartao("toundra", { nome: "Pack 2 TOUNDRA", tipo: "2 paires hautes · laine recyclée", preco: 52.2, selo: "−5,80 €", fotos: ["products/DSC5219_crop_22.jpg?v=1701013770", "products/DSC5226_crop_80.jpg?v=1701013770"] })
+    + cartao("summer", { nome: "Pack 4 SUMMER", tipo: "4 paires invisibles", preco: 61.2, selo: "−6,80 €", fotos: ["products/site2.jpg?v=1617975216", "files/Pack-SUMMER.jpg?v=1701020596"] });
+</script>
+</body>
+</html>
