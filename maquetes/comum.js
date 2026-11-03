@@ -8,7 +8,8 @@ const img = (caminho, w = 800) => `${CDN}${caminho}${caminho.includes("?") ? "&"
 // Valores que dependem de decisões da Marcia: mudar aqui muda todas as maquetes.
 const REGRAS = {
   freteGratis: 60,                  // D1: hoje é 150 €
-  pack3: 10, pack5: 15,             // D3/D11: desconto por quantidade (hoje 5 % a partir de 3 pares)
+  pack3: 10, pack5: 15,             // D3: desconto por quantidade (hoje 5 % a partir de 3 pares)
+  etiqueta: 45,                     // D11: etiqueta de devolução a partir deste valor, na França metropolitana (a regra de 2021)
 };
 
 const COR = { "Chiné Mangue": "#d99a3d", "Chiné Bordeaux": "#6e2a35", "Chiné Bleu atlantique": "#33506e", "Chiné Vert sapin": "#3d5a48",
@@ -72,7 +73,7 @@ const estrelas = (nota, avis, curto) => `<span class="estrelas"><span class="e" 
 
 function cabecalho(ativo = "") {
   return `
-  <div class="anuncio" data-d="D1 · frete grátis">Livraison offerte dès <b>${REGRAS.freteGratis} €</b><span class="sep">|</span><span class="extra">Étiquette retour offerte pour recycler vos vieilles chaussettes</span></div>
+  <div class="anuncio" data-d="D1 · frete grátis">Livraison offerte dès <b>${REGRAS.freteGratis} €</b><span class="sep">|</span><span class="extra">Étiquette retour offerte dès ${REGRAS.etiqueta} € pour recycler vos vieilles chaussettes</span></div>
   <header class="cabecalho"><div class="miolo">
     <a class="so-celular" href="#" aria-label="Menu" style="display:grid;place-items:center">${ICONE.menu}</a>
     <a class="logo" href="accueil.html"><img src="https://chaussettesorphelines.com/cdn/shop/files/Logo_Chaussettes_Orphelines_black_2024_1_450x.png?v=1726070443" alt="Chaussettes Orphelines"></a>

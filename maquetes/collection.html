@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="loja.css">
 <style>
-  .topo-colecao { padding: 40px 0 28px; display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: end; }
+  .topo-colecao { padding-block: 40px 28px; display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: end; }
   .topo-colecao p { color: var(--tinta-2); max-width: 56ch; margin-top: 12px; }
   .topo-colecao .regua { width: 420px; }
   .filtros { position: sticky; top: 76px; z-index: 10; background: var(--papel); border-block: 1px solid var(--fio); }
@@ -20,7 +20,7 @@
   .ordenar { display: flex; gap: 18px; font-size: .9rem; white-space: nowrap; }
   .ordenar button { background: none; border: 0; font-weight: 600; display: inline-flex; gap: 6px; align-items: center; }
   .ordenar span { color: var(--tinta-2); }
-  .lista { padding: 36px 0 80px; }
+  .lista { padding-block: 36px 80px; }
   .bloco-promo { grid-column: span 2; position: relative; border-radius: var(--raio); overflow: hidden; color: #fff; display: grid; align-content: end; min-height: 100%; text-decoration: none; }
   .bloco-promo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   .bloco-promo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(25, 18, 15, .8), rgba(25, 18, 15, 0) 60%); }
@@ -28,11 +28,11 @@
   .bloco-promo h2 { font-size: 1.9rem; }
   .bloco-promo .btn { background: var(--papel); color: var(--tinta); min-height: 44px; }
   @media (max-width: 900px) {
-    .topo-colecao { grid-template-columns: 1fr; padding: 24px 0 18px; }
+    .topo-colecao { grid-template-columns: 1fr; padding-block: 24px 18px; }
     .topo-colecao .regua { width: 100%; }
     .filtros { top: 62px; }
     .filtros .miolo { flex-direction: column; align-items: stretch; gap: 10px; }
-    .ordenar { justify-content: space-between; }
+    .ordenar { justify-content: space-between; flex-wrap: wrap; gap: 6px 18px; }
     .lista { padding-top: 24px; }
     .bloco-promo { min-height: 300px; }
   }

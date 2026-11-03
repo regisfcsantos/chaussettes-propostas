@@ -28,9 +28,9 @@
   .tela h2 { font-family: "DM Sans", sans-serif; font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; color: var(--tinta-2); margin-bottom: 10px; }
   .pc { width: 100%; aspect-ratio: 1440 / 900; overflow: hidden; border-radius: 10px; background: #fff; box-shadow: 0 10px 30px rgba(35, 29, 26, .18); position: relative; }
   .pc iframe { width: 1440px; height: 900px; border: 0; transform-origin: 0 0; position: absolute; top: 0; left: 0; }
-  .cel { width: 360px; height: 760px; border-radius: 38px; background: #1b1715; padding: 12px; box-shadow: 0 10px 30px rgba(35, 29, 26, .25); }
-  .cel div { width: 336px; height: 736px; border-radius: 28px; overflow: hidden; position: relative; background: #fff; }
-  .cel iframe { width: 390px; height: 854px; border: 0; transform: scale(.8615); transform-origin: 0 0; }
+  .cel { width: min(360px, 100%); border-radius: 38px; background: #1b1715; padding: 12px; box-shadow: 0 10px 30px rgba(35, 29, 26, .25); }
+  .cel div { width: 100%; aspect-ratio: 336 / 736; border-radius: 28px; overflow: hidden; position: relative; background: #fff; }
+  .cel iframe { width: 390px; height: 854px; border: 0; transform: scale(.8615); transform-origin: 0 0; position: absolute; top: 0; left: 0; }
   .notas { background: var(--papel); border-radius: 10px; padding: 22px 22px 26px; display: grid; gap: 18px; }
   .notas h3 { font-family: "Playfair Display", serif; font-size: 1.25rem; margin: 0; }
   .notas ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; }
@@ -44,7 +44,7 @@
   .decisoes p { margin: 6px 0 0; font-size: .9rem; }
   .decisoes b { background: #ffd24d; padding: 0 5px; border-radius: 3px; }
   @media (max-width: 1700px) { .palco { grid-template-columns: minmax(0, 1fr) 360px; } .notas-col { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; } }
-  @media (max-width: 900px) { .palco { grid-template-columns: 1fr; padding: 0 16px 32px; } .notas-col { grid-template-columns: 1fr; } header.topo, .barra { padding-inline: 16px; } }
+  @media (max-width: 900px) { .palco { grid-template-columns: minmax(0, 1fr); padding: 0 16px 32px; } .cel { margin-inline: auto; } .notas-col { grid-template-columns: 1fr; } header.topo, .barra { padding-inline: 16px; } }
 </style>
 </head>
 <body>
@@ -67,7 +67,7 @@
       <p><b>D2</b> Kits de Natal: os 3 coffrets são sugestões com produtos e preços reais (−10 %).</p>
       <p><b>D3</b> Desconto por quantidade: <b>−10 % a partir de 3 pares, −15 % a partir de 5</b> na maquete. Hoje é −5 %. Em 2021 era −20 % e −30 % (10 pares).</p>
       <p><b>D5</b> Números de impacto: os do pôster e do cartaz « 35 tonnes ». A Marcia confirma.</p>
-      <p><b>D11</b> (nova) Voltar com a <b>etiqueta de devolução</b> para reciclar as meias velhas (até 2021; ~2 € por pedido). Os clientes elogiavam e reclamavam quando não vinha.</p>
+      <p><b>D11</b> (nova) Voltar com a <b>etiqueta de devolução</b> para reciclar as meias velhas: até 500 g na mesma envelope, em pedidos a partir de <b>45 €</b> na França metropolitana (a regra até 2021; ~2 € por pedido). Os clientes elogiavam e reclamavam quando não vinha.</p>
       <p><b>D12</b> (nova) Troca grátis, com prazo maior no Natal (até 2021 era assim; hoje o cliente paga).</p>
     </section>
   </div>
@@ -125,7 +125,10 @@ function mostrar(p) {
 abas.innerHTML = PAGINAS.map(p => `<button role="tab" data-id="${p.id}">${p.nome}</button>`).join("");
 abas.onclick = e => { const b = e.target.closest("button"); if (b) mostrar(PAGINAS.find(p => p.id === b.dataset.id)); };
 marcas.onchange = () => mostrar(atual);
-function escala() { const w = document.getElementById("pc").clientWidth; fPc.style.transform = `scale(${w / 1440})`; }
+function escala() {
+  fPc.style.transform = `scale(${document.getElementById("pc").clientWidth / 1440})`;
+  fCel.style.transform = `scale(${fCel.parentElement.clientWidth / 390})`;   // a tela do celular encolhe junto com a moldura
+}
 addEventListener("resize", escala); escala();
 mostrar(PAGINAS.find(p => "#" + p.id === location.hash) || PAGINAS[0]);
 </script>
