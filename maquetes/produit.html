@@ -56,36 +56,6 @@
   /* Barra fixa do celular */
   .barra-fixa { display: none; }
 
-  /* Carrinho lateral */
-  .veu { position: fixed; inset: 0; background: rgba(35, 29, 26, .45); z-index: 40; opacity: 0; pointer-events: none; transition: opacity .3s ease-out; }
-  .gaveta { position: fixed; top: 0; right: 0; bottom: 0; width: min(440px, 100%); background: var(--papel); z-index: 41; display: grid; grid-template-rows: auto auto 1fr auto;
-    transform: translateX(100%); visibility: hidden; transition: transform .45s cubic-bezier(.16, 1, .3, 1), visibility 0s .45s; }
-  .aberto .veu { opacity: 1; pointer-events: auto; }
-  .aberto .gaveta { transform: none; visibility: visible; transition: transform .45s cubic-bezier(.16, 1, .3, 1); box-shadow: -12px 0 40px rgba(35, 29, 26, .18); }
-  .gaveta > header { display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; border-bottom: 1px solid var(--fio); }
-  .gaveta > header h2 { font-size: 1.4rem; }
-  .gaveta > header button { background: none; border: 0; padding: 6px; }
-  .metas { padding: 18px 24px; display: grid; gap: 14px; border-bottom: 1px solid var(--fio); font-size: .9rem; }
-  .meta p b { font-weight: 700; }
-  .progresso { height: 6px; border-radius: 3px; background: var(--fio); margin-top: 8px; overflow: hidden; }
-  .progresso i { display: block; height: 100%; width: var(--p); background: var(--verde); border-radius: 3px; }
-  .itens { overflow-y: auto; padding: 8px 24px; }
-  .item { display: grid; grid-template-columns: 76px 1fr auto; gap: 14px; padding: 16px 0; border-bottom: 1px solid var(--fio); font-size: .9rem; }
-  .item img { width: 76px; height: 92px; object-fit: cover; border-radius: 4px; }
-  .item b { display: block; font-size: .95rem; }
-  .item span { color: var(--tinta-2); }
-  .item .mini-qtd { display: inline-flex; gap: 14px; border: 1px solid var(--fio); border-radius: 20px; padding: 4px 12px; margin-top: 8px; color: var(--tinta); }
-  .sugestao { margin: 18px 0 8px; display: grid; grid-template-columns: 56px 1fr auto; gap: 12px; align-items: center; background: var(--la); padding: 12px; border-radius: var(--raio); font-size: .88rem; }
-  .sugestao img { width: 56px; height: 56px; object-fit: cover; border-radius: 4px; }
-  .sugestao button { border: 1.5px solid var(--tinta); background: transparent; border-radius: 18px; padding: 6px 12px; font-weight: 600; font-size: .82rem; }
-  .presente { display: flex; gap: 10px; align-items: start; font-size: .9rem; padding: 14px 0; }
-  .presente input { width: 18px; height: 18px; accent-color: var(--framboesa); margin-top: 2px; }
-  .gaveta > footer { padding: 18px 24px 24px; border-top: 1px solid var(--fio); display: grid; gap: 12px; background: #fff; }
-  .total { display: flex; justify-content: space-between; font-size: 1.05rem; }
-  .total b { font-size: 1.2rem; }
-  .seguro { display: flex; gap: 8px; align-items: center; justify-content: center; font-size: .82rem; color: var(--tinta-2); }
-  .seguro .ico { width: 16px; height: 16px; }
-
   @media (max-width: 900px) {
     .trilha { display: none; }
     .produto { grid-template-columns: 1fr; gap: 20px; padding-bottom: 40px; }
@@ -195,25 +165,10 @@
 
 <div class="barra-fixa"><div><b>LASKA · 25 €</b>Bleu atlantique · 39/41</div><a class="btn" href="?panier=1" onclick="document.body.classList.add('aberto');return false">Ajouter au panier</a></div>
 
-<div class="veu" onclick="document.body.classList.remove('aberto')"></div>
-<aside class="gaveta" aria-label="Panier">
-  <header><h2>Votre panier (2)</h2><button aria-label="Fermer" onclick="document.body.classList.remove('aberto')"><script>document.write(ICONE.fechar)</script></button></header>
-  <div class="metas">
-    <div class="meta" data-d="D1"><p>Plus que <b>6 €</b> pour la livraison offerte</p><div class="progresso"><i style="--p:90%"></i></div></div>
-    <div class="meta" data-d="D3"><p>Ajoutez <b>1 paire</b> : −10 % sur tout le panier</p><div class="progresso"><i style="--p:66%"></i></div></div>
-  </div>
-  <div class="itens">
-    <div class="item"><script>document.write(`<img src="${img(PRODUTOS.laska.fotos[0], 200)}" alt="">`)</script><div><b>LASKA</b><span>Chiné Bleu atlantique · 39/41</span><br><span class="mini-qtd">− &nbsp;1&nbsp; +</span></div><span class="preco">25 €</span></div>
-    <div class="item"><script>document.write(`<img src="${img(PRODUTOS.toundra.fotos[0], 200)}" alt="">`)</script><div><b>TOUNDRA</b><span>Chiné Bordeaux · 36/38</span><br><span class="mini-qtd">− &nbsp;1&nbsp; +</span></div><span class="preco">29 €</span></div>
-    <div class="sugestao"><script>document.write(`<img src="${img(PRODUTOS.summer.fotos[0], 120)}" alt="">`)</script><div><b>SUMMER</b> · 17 €<br><span style="color:var(--tinta-2)">La 3<sup>e</sup> paire déclenche la remise</span></div><button>Ajouter</button></div>
-    <label class="presente" data-d="D2"><input type="checkbox"> <span><b>C’est pour offrir</b><br><span style="color:var(--tinta-2)">Emballage cadeau et carte « Vos chaussettes ont une histoire », offerts.</span></span></label>
-  </div>
-  <footer>
-    <div class="total"><span>Sous-total</span><b class="num">54,00 €</b></div>
-    <a class="btn btn-largo" href="#">Passer commande</a>
-    <p class="seguro"><script>document.write(ICONE.cadeado)</script>Paiement sécurisé · livraison calculée à l’étape suivante</p>
-  </footer>
-</aside>
+<script>document.write(carrinho([
+  { foto: PRODUTOS.laska.fotos[0], nome: "LASKA", detalhe: "Chiné Bleu atlantique · 39/41", preco: 25 },
+  { foto: PRODUTOS.toundra.fotos[0], nome: "TOUNDRA", detalhe: "Chiné Bordeaux · 36/38", preco: 29 }],
+  { foto: PRODUTOS.summer.fotos[0], nome: "SUMMER", preco: 17, texto: "La 3<sup>e</sup> paire déclenche la remise" }))</script>
 
 <script>
   document.write(rodape());

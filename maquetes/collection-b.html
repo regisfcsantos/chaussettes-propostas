@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Chaussettes B · maquette Chaussettes Orphelines</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="loja.css">
+<style>
+  /* Lista B: catálogo de « natureza morta », uma cor por cartão (como a Veja), grade de fios finos de ponta a ponta. */
+  .trilha { font-size: .82rem; color: var(--tinta-2); padding: 18px 0 0; }
+  .trilha a { text-decoration: none; }
+  .topo-b { display: flex; justify-content: space-between; align-items: end; gap: 20px; padding-block: 10px 22px; }
+  .topo-b h1 { font-family: var(--sans); font-size: 1.5rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+  .topo-b h1 small { font-size: .9rem; font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--tinta-2); margin-left: 8px; }
+  .topo-b p { font-size: .9rem; color: var(--tinta-2); }
+  .topo-b p b { color: var(--framboesa); }
+  .filtros-b { position: sticky; top: 76px; z-index: 10; background: #fff; border-top: 1px solid var(--fio); }
+  .filtros-b .miolo { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-block: 12px; }
+  .chips { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
+  .chips button { flex: none; height: 36px; padding: 0 14px; border-radius: 18px; border: 1px solid var(--fio); background: #fff; font-size: .86rem; font-weight: 500; }
+  .chips button[aria-pressed="true"] { background: var(--tinta); color: #fff; border-color: var(--tinta); }
+  .ordenar { display: flex; gap: 18px; font-size: .88rem; white-space: nowrap; }
+  .ordenar button { background: none; border: 0; font-weight: 600; }
+  .ordenar span { color: var(--tinta-2); }
+  .lista-b { padding-bottom: 80px; }
+  .bloco-b { grid-column: span 2; position: relative; overflow: hidden; color: #fff; display: grid; align-content: end; text-decoration: none; border-right: 1px solid var(--fio); border-bottom: 1px solid var(--fio); }
+  .bloco-b img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .bloco-b::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(25, 18, 15, .75), rgba(25, 18, 15, 0) 60%); }
+  .bloco-b div { position: relative; z-index: 1; padding: 28px; display: grid; gap: 8px; justify-items: start; }
+  .bloco-b h2 { font-size: 1.8rem; }
+  .bloco-b .btn { background: #fff; color: var(--tinta); min-height: 44px; }
+  @media (max-width: 900px) {
+    .topo-b { flex-direction: column; align-items: start; gap: 6px; padding-bottom: 14px; }
+    .filtros-b { top: 62px; }
+    .filtros-b .miolo { flex-direction: column; align-items: stretch; gap: 10px; }
+    .ordenar { justify-content: space-between; flex-wrap: wrap; gap: 6px 16px; }
+    .bloco-b { min-height: 320px; }
+  }
+</style>
+</head>
+<body class="nm">
+<script src="comum.js"></script>
+<script>document.write(cabecalho("chaussettes", { inicio: "accueil-c.html", colecao: "collection-b.html", carrinho: "produit-b.html?panier=1" }))</script>
+<main>
+  <div class="miolo">
+    <nav class="trilha" aria-label="Fil d’Ariane"><a href="accueil-c.html">Accueil</a> / Chaussettes</nav>
+    <div class="topo-b">
+      <h1>Chaussettes <small>14 articles</small></h1>
+      <script>document.write(`<p data-d="D3">Mélangez les modèles : <b>−${REGRAS.pack3} % dès 3 paires</b>, <b>−${REGRAS.pack5} % dès 5</b>, automatiquement.</p>`)</script>
+    </div>
+  </div>
+  <div class="filtros-b"><div class="miolo">
+    <div class="chips" role="group" aria-label="Hauteur">
+      <button aria-pressed="true">Toutes</button><button>Invisibles</button><button>Basses</button><button>Mi-hauteur</button><button>Mi-mollet</button><button>Hautes</button><button>Mi-cuisses</button><button>Chaussons</button>
+    </div>
+    <div class="ordenar"><button>Matière</button><button>Couleur</button><button>Taille</button><span>Trier : <b>Les plus aimées</b></span></div>
+  </div></div>
+  <div class="miolo lista-b"><div class="grade-nm" id="grade"></div></div>
+</main>
+<script>
+  document.write(rodape());
+  const ids = ["laska", "parisRose", "summerEcru", "funny", "toundra", "parisBleu", "slower", "summerBicolores", "cancan", "parisVert", "summerGris", "funnylin", "parisGris", "summerEcruLurex"];
+  const promo = `<a class="bloco-b" href="accueil-c.html#coffrets" data-d="D2"><img src="${img("products/DSC5226_crop_80.jpg?v=1701013770", 1000)}" alt="">
+    <div><h2>Coffrets de Noël</h2><p>3 paires LASKA, 67,50 € au lieu de 75 €</p><span class="btn">Voir les coffrets</span></div></a>`;
+  const cartoes = ids.map(id => cartaoNM(id));
+  cartoes.splice(6, 0, promo);
+  document.getElementById("grade").innerHTML = cartoes.join("");
+</script>
+</body>
+</html>

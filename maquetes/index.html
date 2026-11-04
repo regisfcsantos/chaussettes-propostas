@@ -8,129 +8,390 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
 <style>
-  :root { --papel: #fbf7f2; --la: #f3ebe1; --tinta: #231d1a; --tinta-2: #5f534c; --fio: #e3d7c9; --framboesa: #a3303e; --verde: #2e5a4c; }
+  /* Apresentação das maquetes (R5): a maquete ocupa a tela inteira; a barra lateral troca a versão e o aparelho.
+     As maquetes avisam por postMessage (comum.js) qual página está aberta, para a barra acompanhar os cliques. */
+  :root { --painel: 320px; --tinta: #231d1a; --tinta-2: #5f534c; --papel: #fbf7f2; --fio: #e3d7c9; --framboesa: #a3303e; --verde: #2e5a4c;
+    --escuro: #211b18; --escuro-2: #2f2723; --claro: #efe6dc; --claro-2: #b9ab9f; }
   * { box-sizing: border-box; }
-  body { margin: 0; background: #ece5dc; color: var(--tinta); font: 15px/1.55 "DM Sans", system-ui, sans-serif; }
-  h1, h2 { font-family: "Playfair Display", Georgia, serif; font-weight: 600; margin: 0; line-height: 1.15; }
+  html, body { height: 100%; }
+  body { margin: 0; font: 15px/1.5 "DM Sans", system-ui, sans-serif; color: var(--claro); background: #e7e1da; overflow: hidden; }
+  button { font: inherit; color: inherit; cursor: pointer; }
   a { color: inherit; }
-  header.topo { background: var(--tinta); color: #f3ebe1; padding: 28px 40px 0; }
-  header.topo h1 { font-size: 1.9rem; color: #fff; }
-  header.topo p { max-width: 90ch; margin: 8px 0 0; color: #d9cfc4; }
-  header.topo p a { color: #fff; }
-  .abas { display: flex; gap: 4px; margin-top: 22px; flex-wrap: wrap; }
-  .abas button { border: 0; background: transparent; color: #d9cfc4; font: 600 .95rem "DM Sans", sans-serif; padding: 12px 18px; border-radius: 8px 8px 0 0; cursor: pointer; }
-  .abas button[aria-selected="true"] { background: #ece5dc; color: var(--tinta); }
-  .barra { display: flex; gap: 24px; align-items: center; padding: 16px 40px; flex-wrap: wrap; }
-  .barra label { display: inline-flex; gap: 8px; align-items: center; font-weight: 600; cursor: pointer; }
-  .barra input { width: 18px; height: 18px; accent-color: var(--framboesa); }
-  .barra a.abrir { font-weight: 600; }
-  .palco { display: grid; grid-template-columns: minmax(0, 1fr) 360px 340px; gap: 28px; padding: 0 40px 48px; align-items: start; }
-  .tela h2 { font-family: "DM Sans", sans-serif; font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; color: var(--tinta-2); margin-bottom: 10px; }
-  .pc { width: 100%; aspect-ratio: 1440 / 900; overflow: hidden; border-radius: 10px; background: #fff; box-shadow: 0 10px 30px rgba(35, 29, 26, .18); position: relative; }
-  .pc iframe { width: 1440px; height: 900px; border: 0; transform-origin: 0 0; position: absolute; top: 0; left: 0; }
-  .cel { width: min(360px, 100%); border-radius: 38px; background: #1b1715; padding: 12px; box-shadow: 0 10px 30px rgba(35, 29, 26, .25); }
-  .cel div { width: 100%; aspect-ratio: 336 / 736; border-radius: 28px; overflow: hidden; position: relative; background: #fff; }
-  .cel iframe { width: 390px; height: 854px; border: 0; transform: scale(.8615); transform-origin: 0 0; position: absolute; top: 0; left: 0; }
-  .notas { background: var(--papel); border-radius: 10px; padding: 22px 22px 26px; display: grid; gap: 18px; }
-  .notas h3 { font-family: "Playfair Display", serif; font-size: 1.25rem; margin: 0; }
-  .notas ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; }
-  .notas li { display: grid; gap: 4px; }
-  .tag { justify-self: start; font-size: .72rem; font-weight: 700; padding: 2px 8px; border-radius: 10px; background: var(--la); color: var(--tinta-2); }
-  .tag.h { background: #f6dfe2; color: #7c2330; }
-  .tag.d { background: #e1ece7; color: var(--verde); }
-  .tag.r { background: #e7e3f1; color: #4a3f73; }
-  .decisoes { background: #fff8db; border-radius: 10px; padding: 18px 22px; }
-  .decisoes h3 { margin-bottom: 10px; }
-  .decisoes p { margin: 6px 0 0; font-size: .9rem; }
-  .decisoes b { background: #ffd24d; padding: 0 5px; border-radius: 3px; }
-  @media (max-width: 1700px) { .palco { grid-template-columns: minmax(0, 1fr) 360px; } .notas-col { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; } }
-  @media (max-width: 900px) { .palco { grid-template-columns: minmax(0, 1fr); padding: 0 16px 32px; } .cel { margin-inline: auto; } .notas-col { grid-template-columns: 1fr; } header.topo, .barra { padding-inline: 16px; } }
+  :focus-visible { outline: 2px solid #ffd24d; outline-offset: 2px; }
+
+  /* ---------- Barra lateral ---------- */
+  #painel { position: fixed; inset: 0 auto 0 0; width: var(--painel); background: var(--escuro); display: flex; flex-direction: column; z-index: 5;
+    transition: transform .35s cubic-bezier(.16, 1, .3, 1); }
+  .fechado #painel { transform: translateX(-100%); }
+  .rolagem { flex: 1; overflow-y: auto; padding: 22px 20px 24px; display: grid; gap: 22px; align-content: start; scrollbar-width: thin; scrollbar-color: #4a403b transparent; }
+  .marca h1 { font: 600 1.3rem/1.2 "Playfair Display", Georgia, serif; color: #fff; margin: 0; }
+  .marca p { margin: 6px 0 0; font-size: .85rem; color: var(--claro-2); }
+  .rotulo { font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--claro-2); margin: 0 0 8px; }
+
+  .aparelho { display: grid; grid-template-columns: 1fr 1fr; background: var(--escuro-2); border-radius: 10px; padding: 4px; }
+  .aparelho button { border: 0; background: transparent; border-radius: 7px; padding: 10px 8px; font-weight: 600; display: flex; gap: 8px; justify-content: center; align-items: center; color: var(--claro-2); }
+  .aparelho button[aria-pressed="true"] { background: var(--claro); color: var(--tinta); }
+  .aparelho svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linejoin: round; }
+
+  .grupo { display: grid; gap: 4px; }
+  .grupo + .grupo { margin-top: 14px; }
+  .opcao { display: grid; grid-template-columns: 30px 1fr; gap: 2px 10px; align-items: center; text-align: left; border: 0; border-radius: 9px; padding: 9px 10px; background: transparent; }
+  .opcao:hover { background: var(--escuro-2); }
+  .opcao .letra { grid-row: span 2; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: .85rem; box-shadow: inset 0 0 0 1.5px #5a4e47; color: var(--claro); }
+  .opcao b { font-weight: 600; color: #fff; display: flex; gap: 8px; align-items: center; }
+  .opcao small { font-size: .8rem; color: var(--claro-2); line-height: 1.3; }
+  .opcao .novo { font-size: .66rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; background: #ffd24d; color: var(--tinta); padding: 1px 6px; border-radius: 4px; }
+  .opcao[aria-current="true"] { background: var(--claro); }
+  .opcao[aria-current="true"] b { color: var(--tinta); }
+  .opcao[aria-current="true"] small { color: var(--tinta-2); }
+  .opcao[aria-current="true"] .letra { background: var(--framboesa); color: #fff; box-shadow: none; }
+
+  .marcas { display: flex; gap: 10px; align-items: start; font-size: .88rem; cursor: pointer; background: var(--escuro-2); border-radius: 9px; padding: 11px 12px; }
+  .marcas input { width: 17px; height: 17px; margin: 2px 0 0; accent-color: #ffd24d; flex: none; }
+
+  details { background: var(--escuro-2); border-radius: 9px; }
+  summary { list-style: none; cursor: pointer; padding: 12px 14px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; color: #fff; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: ""; width: 8px; height: 8px; border-right: 1.5px solid; border-bottom: 1.5px solid; transform: rotate(45deg) translateY(-2px); transition: transform .2s; }
+  details[open] summary::after { transform: rotate(225deg); }
+  details > div { padding: 0 14px 14px; display: grid; gap: 12px; font-size: .86rem; color: var(--claro); }
+  .nota { display: grid; gap: 3px; }
+  .nota b { color: #fff; font-weight: 600; }
+  .nota span { color: #d7cbbf; }
+  .tag { justify-self: start; font-size: .68rem; font-weight: 700; padding: 1px 7px; border-radius: 9px; background: #3d3430; color: #d7cbbf; }
+  .tag.m { background: #ffd24d; color: var(--tinta); }
+  .tag.h { background: #5a2830; color: #f6dfe2; }
+  .tag.d { background: #23413a; color: #cfe5dc; }
+  .tag.r { background: #39345a; color: #e2ddf5; }
+  .ref { display: grid; gap: 2px; }
+  .ref a { font-weight: 600; color: #fff; }
+  .ref span { color: #d7cbbf; }
+  .decisao b { background: #ffd24d; color: var(--tinta); padding: 0 5px; border-radius: 3px; }
+
+  .pe { border-top: 1px solid #3a312c; padding: 12px 20px 14px; display: grid; gap: 8px; font-size: .82rem; color: var(--claro-2); }
+  .pe a { color: var(--claro); }
+  .pe button { border: 1px solid #4a403b; background: transparent; border-radius: 8px; padding: 9px 10px; font-weight: 600; color: var(--claro); }
+  .so-tel { display: none; }
+  .pe button:hover { background: var(--escuro-2); }
+  kbd { font: 600 .75rem "DM Sans", sans-serif; border: 1px solid #5a4e47; border-radius: 4px; padding: 0 5px; color: var(--claro); }
+
+  /* ---------- Palco: a maquete na tela inteira ---------- */
+  #palco { position: fixed; inset: 0 0 0 var(--painel); transition: left .35s cubic-bezier(.16, 1, .3, 1); overflow: hidden; }
+  .fechado #palco { left: 0; }
+  #moldura { position: absolute; inset: 0; }
+  #moldura iframe { border: 0; display: block; background: #fff; }
+  .pc #moldura iframe { width: 100%; height: 100%; transform-origin: 0 0; }
+  .cel #palco { display: grid; place-items: center; background: radial-gradient(ellipse at 50% 40%, #efe9e2, #d9d1c7); }
+  .cel #moldura { position: relative; inset: auto; width: 414px; height: min(868px, calc(100vh - 36px)); padding: 12px; border-radius: 46px; background: #1b1715;
+    box-shadow: 0 24px 60px rgba(35, 29, 26, .35), inset 0 0 0 2px #3b332e; }
+  .cel #moldura iframe { width: 390px; height: 100%; border-radius: 34px; }
+
+  #abrir-painel { position: fixed; left: 16px; bottom: 16px; z-index: 6; border: 0; border-radius: 24px; background: var(--escuro); color: #fff; padding: 12px 18px; font-weight: 700;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .3); display: none; gap: 8px; align-items: center; }
+  .fechado #abrir-painel { display: inline-flex; }
+  #abrir-painel svg, .ico { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+
+  /* Primeira visita: um balão explicando a barra */
+  #dica { position: fixed; left: calc(var(--painel) + 18px); top: 150px; z-index: 7; width: 300px; background: #ffd24d; color: var(--tinta); border-radius: 12px; padding: 16px 18px;
+    box-shadow: 0 14px 40px rgba(0, 0, 0, .3); font-size: .92rem; display: grid; gap: 10px; }
+  #dica::before { content: ""; position: absolute; left: -9px; top: 22px; border: 9px solid transparent; border-left: 0; border-right-color: #ffd24d; }
+  #dica button { justify-self: start; border: 0; background: var(--tinta); color: #fff; border-radius: 8px; padding: 8px 14px; font-weight: 700; }
+  #dica[hidden] { display: none; }
+
+  /* Barra de cima, só quando a apresentação é aberta num celular */
+  #topo-cel { display: none; }
+  @media (max-width: 760px) {
+    #topo-cel { display: flex; position: fixed; inset: 0 0 auto 0; height: 48px; z-index: 4; background: var(--escuro); align-items: center; gap: 6px; padding: 0 8px; }
+    #topo-cel .nome { flex: 1; min-width: 0; text-align: center; font-weight: 700; font-size: .9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #fff; }
+    #topo-cel button { border: 0; background: var(--escuro-2); border-radius: 8px; height: 36px; min-width: 36px; padding: 0 10px; display: grid; place-items: center; font-weight: 700; }
+    #painel { width: min(340px, 88vw); transform: translateX(-100%); box-shadow: 12px 0 40px rgba(0, 0, 0, .35); }
+    .painel-aberto #painel { transform: none; }
+    .painel-aberto #veu { display: block; }
+    #palco, .fechado #palco { inset: 48px 0 0 0; }
+    .cel #palco { display: block; background: #fff; }
+    .cel #moldura, .pc #moldura { position: absolute; inset: 0; width: auto; height: auto; padding: 0; border-radius: 0; box-shadow: none; background: #fff; }
+    .cel #moldura iframe, .pc #moldura iframe { width: 100%; height: 100%; border-radius: 0; transform: none; }
+    .bloco-aparelho, #abrir-painel, .fechado #abrir-painel, .so-pc { display: none !important; }
+    .so-tel { display: inline; }
+    #dica { left: 12px; right: 12px; top: 60px; width: auto; }
+    #dica::before { display: none; }
+  }
+  #veu { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, .45); z-index: 4; }
+  .paginas { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; background: var(--escuro-2); border-radius: 10px; padding: 4px; }
+  .paginas button { border: 0; background: transparent; border-radius: 7px; padding: 9px 4px; font-weight: 600; font-size: .85rem; color: var(--claro-2); }
+  .paginas button[aria-pressed="true"] { background: var(--claro); color: var(--tinta); }
+  .paginas button:disabled { opacity: .3; cursor: not-allowed; }
+  #versoes { display: grid; gap: 4px; }
 </style>
 </head>
-<body>
-<header class="topo">
-  <h1>Proposta de layout da loja (R4)</h1>
-  <p>Maquetes com os produtos, preços, fotos e avaliações reais da loja. Por trás de cada escolha estão os dados do Shopify, a loja de 2019 a 2021 (quando vendia mais, ver <a href="../historico-loja/o-que-mudou.html">o que mudou</a>) e as referências que você escolheu. Role dentro das telas; no computador, os botões funcionam.</p>
-  <nav class="abas" role="tablist"></nav>
-</header>
-<div class="barra">
-  <label><input type="checkbox" id="marcas"> Mostrar em amarelo o que depende de decisão da Marcia</label>
-  <a class="abrir" id="abrir" href="#" target="_blank">Abrir esta página sozinha ↗</a>
-</div>
-<div class="palco">
-  <div class="tela"><h2>Computador</h2><div class="pc" id="pc"><iframe id="f-pc" title="Computador"></iframe></div></div>
-  <div class="tela"><h2>Celular (64 % das visitas)</h2><div class="cel"><div><iframe id="f-cel" title="Celular"></iframe></div></div></div>
-  <div class="notas-col" style="display:grid;gap:20px">
-    <section class="notas" id="notas"></section>
-    <section class="decisoes"><h3 style="font-family:'Playfair Display',serif;font-size:1.2rem">Decisões da Marcia nesta proposta</h3>
-      <p><b>D1</b> Frete grátis: <b>60 €</b> na maquete. Hoje é 150 € (pedido médio: 80 €). Em 2020 era 45 €; em 2021, 65 €.</p>
-      <p><b>D2</b> Kits de Natal: os 3 coffrets são sugestões com produtos e preços reais (−10 %).</p>
-      <p><b>D3</b> Desconto por quantidade: <b>−10 % a partir de 3 pares, −15 % a partir de 5</b> na maquete. Hoje é −5 %. Em 2021 era −20 % e −30 % (10 pares).</p>
-      <p><b>D5</b> Números de impacto: os do pôster e do cartaz « 35 tonnes ». A Marcia confirma.</p>
-      <p><b>D11</b> (nova) Voltar com a <b>etiqueta de devolução</b> para reciclar as meias velhas: até 500 g na mesma envelope, em pedidos a partir de <b>45 €</b> na França metropolitana (a regra até 2021; ~2 € por pedido). Os clientes elogiavam e reclamavam quando não vinha.</p>
-      <p><b>D12</b> (nova) Troca grátis, com prazo maior no Natal (até 2021 era assim; hoje o cliente paga).</p>
-    </section>
+<body class="pc">
+
+<aside id="painel" aria-label="Opções de layout">
+  <div class="rolagem">
+    <div class="marca">
+      <h1>Proposta de layout da loja</h1>
+      <p>Chaussettes Orphelines · versão 6, 05/11/2026. Uma versão para cada site que a Marcia mandou, com os produtos, preços, fotos e avaliações reais da loja.</p>
+    </div>
+
+    <div>
+      <p class="rotulo">1 · Escolha a referência</p>
+      <nav id="versoes"></nav>
+    </div>
+
+    <div>
+      <p class="rotulo">2 · Escolha a página</p>
+      <div class="paginas" id="paginas" role="group" aria-label="Página"></div>
+    </div>
+
+    <div class="bloco-aparelho">
+      <p class="rotulo">3 · Ver como</p>
+      <div class="aparelho" role="group" aria-label="Aparelho">
+        <button data-ap="pc" aria-pressed="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="11" rx="1.5"/><path d="M2 19h20"/></svg>Computador</button>
+        <button data-ap="cel" aria-pressed="false"><svg viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/></svg>Celular</button>
+      </div>
+    </div>
+
+    <details open id="bloco-notas"><summary>Por que assim</summary><div id="notas"></div></details>
+
+    <label class="marcas"><input type="checkbox" id="marcas"> <span>Mostrar em amarelo o que depende de uma decisão da Marcia</span></label>
+
+    <details><summary>Decisões da Marcia nestas maquetes</summary><div class="decisao">
+      <p style="margin:0"><b>D1</b> Frete grátis: <b>60 €</b> na maquete. Hoje é 150 € (pedido médio: 80 €). Em 2020 era 45 €; em 2021, 65 €.</p>
+      <p style="margin:0"><b>D2</b> Kits de Natal: os 3 coffrets são sugestões com produtos e preços reais (−10 %).</p>
+      <p style="margin:0"><b>D3</b> Desconto por quantidade: <b>−10 % a partir de 3 pares, −15 % a partir de 5</b>. Hoje é −5 %. Em 2021 era −20 % e −30 % (10 pares).</p>
+      <p style="margin:0"><b>D5</b> Números de impacto: os do pôster e do cartaz « 35 tonnes ».</p>
+      <p style="margin:0"><b>D11</b> Voltar com a etiqueta de devolução para reciclar as meias velhas, em pedidos a partir de <b>45 €</b> na França metropolitana (a regra até 2021).</p>
+      <p style="margin:0"><b>D12</b> Troca grátis, com prazo maior no Natal (até 2021 era assim; hoje o cliente paga).</p>
+      <p style="margin:0"><b>D13</b> Sessão de fotos « natureza morta » das meias que ainda não têm (LASKA, TOUNDRA, CANCAN e acessórios).</p>
+    </div></details>
   </div>
+  <div class="pe">
+    <button id="fechar-painel" class="so-pc" title="Ver a página sem a barra">◂ Esconder a barra e ver a página inteira</button>
+    <span class="so-pc">Teclas: <kbd>↑</kbd> <kbd>↓</kbd> trocam a referência, <kbd>←</kbd> <kbd>→</kbd> trocam a página.</span>
+    <a id="abrir" href="#" target="_blank">Abrir só esta página ↗</a>
+    <a id="abrir-ref" href="#" target="_blank" rel="noopener">Abrir o site de referência ↗</a>
+    <a href="../historico-loja/o-que-mudou.html" target="_blank">O que a loja fazia quando vendia mais ↗</a>
+  </div>
+</aside>
+
+<div id="topo-cel">
+  <button id="menu-cel" aria-label="Opções de layout"><svg class="ico" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  <button id="ant-cel" aria-label="Referência anterior">‹</button>
+  <span class="nome" id="nome-cel"></span>
+  <button id="prox-cel" aria-label="Próxima referência">›</button>
 </div>
+<div id="veu"></div>
+
+<main id="palco"><div id="moldura"><iframe id="quadro" title="Maquete da loja"></iframe></div></main>
+<button id="abrir-painel"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Opções de layout</button>
+
+<div id="dica" hidden>
+  <b style="font-size:1rem">Como ver as propostas</b>
+  <span class="so-pc">Aqui ao lado: <b>1</b> escolha a referência (Veja, Bleuforêt, Gallo, Mytheresa), <b>2</b> a página e <b>3</b> computador ou celular. Dentro da página, os botões e os links funcionam.</span>
+  <span class="so-tel">Toque em <b>☰</b> para escolher a referência e a página, ou nas setas <b>‹ ›</b> para passar de uma referência a outra.</span>
+  <button id="entendi">Entendi</button>
+</div>
+
 <script>
-const PAGINAS = [
-  { id: "a", nome: "Página inicial A · vitrine", url: "accueil.html", notas: [
-    ["Produto, preço e estrelas na primeira tela", "Hoje a página inicial não mostra nenhum produto com preço; em 2019 e 2020 mostrava (packs e pré-vendas com preço).", "h", "Loja em 2020"],
-    ["Faixa de garantias logo abaixo", "França, reciclado, frete, troca: as 4 razões para comprar aqui, antes de rolar.", "r", "Label Chaussette"],
-    ["« Les plus aimées »: 8 produtos", "Meias são 88 % das vendas; LASKA, FUNNY e SUMMER fazem 37 %. Lã primeiro, porque é inverno.", "d", "Dados Shopify"],
-    ["Régua do pack", "Mostrar o desconto por quantidade como uma régua, não um texto. Em 2021 o desconto era grande e estava em cada página de meia.", "r", "Le Slip Français"],
-    ["Coffrets de Natal", "Natal = 62 % das vendas do ano; o cliente já compra ~3 itens.", "d", "Dados Shopify"],
-    ["A etiqueta de devolução", "A ideia que só a Chaussettes Orphelines tem, e que os clientes citavam nas avaliações. Sumiu do site em 2022.", "h", "Loja em 2020-21"],
-    ["Impacto e avaliações reais", "Números da Marcia; avaliações verdadeiras dos clientes (Stamped, 201, a importar no Judge.me).", "r", "Thistle Farms"],
-  ]},
-  { id: "b", nome: "Página inicial B · missão", url: "accueil.html?v=b", notas: [
-    ["Mesma loja, outra primeira tela", "A missão abre a página, com foto grande e os números logo abaixo. Os produtos vêm em seguida.", "r", "Thistle Farms · Worn Wear"],
-    ["Para quem é", "O público que mais compra é o ecológico (buscadores verdes convertem 3 a 4 vezes mais) e quem vem do site da associação.", "d", "Dados Shopify"],
-    ["O risco", "Uma tela a mais até o primeiro preço. No celular, onde está a maior perda, a versão A tende a vender mais.", "d", "Dados Shopify"],
-    ["Minha recomendação", "Versão A como página inicial; a B como página « Notre histoire », para quem chega pela associação e pelos e-mails.", "", ""],
-  ]},
-  { id: "col", nome: "Coleção", url: "collection.html", notas: [
-    ["Filtro pela altura da meia", "Invisibles, basses, mi-mollet, hautes, mi-cuisses: é como as pessoas escolhem meia. Hoje são 3 coleções separadas no menu.", "r", "Bombas"],
-    ["Régua do pack no topo", "Lembra o desconto antes de escolher.", "r", "Label Chaussette"],
-    ["Bloco de Natal no meio da grade", "Quem está olhando meias vê os coffrets sem sair da página.", "r", "Archiduchesse"],
-    ["Fotos", "As fotos atuais misturam estilos e algumas têm texto escrito por cima (« Chiné Bordeaux », « PACK TOUNDRA »). Para o tema novo: uma foto de catálogo sem texto, todas no mesmo fundo, e a foto de ambiente como segunda (aparece ao passar o mouse).", "r", "Archiduchesse · Socks & Co"],
-  ]},
-  { id: "prod", nome: "Produto (LASKA)", url: "produit.html", notas: [
-    ["Preço grande e o preço do pack ao lado", "« 22,50 € la paire dès 3 paires »: o pack aparece na hora de decidir.", "r", "Bombas"],
-    ["Cores com nome e tamanhos em botões", "Tamanho esgotado riscado (em 2021 dizia « Victime de son succès »). A dica de tamanho é o texto da própria loja.", "h", "Loja em 2021"],
-    ["Sob o botão: frete, etiqueta, troca", "Tudo o que a página de 2021 dizia, em 3 linhas em vez de 4 parágrafos.", "h", "Loja em 2021"],
-    ["Frase de impacto perto da compra", "Uma frase só, no lugar do texto longo de hoje.", "r", "Krochet Kids"],
-    ["Um bloco de avaliações só", "Hoje são três blocos que se contradizem, com a nota boa escondida e em inglês.", "d", "Análise da loja"],
-    ["No celular, barra fixa « Ajouter au panier »", "O celular converte 0,24 % contra 0,70 % no computador.", "d", "Dados Shopify"],
-  ]},
-  { id: "pan", nome: "Carrinho", url: "produit.html?panier=1", notas: [
-    ["Abre ao lado, sem sair da página", "A pessoa vê o que pôs e continua comprando.", "", ""],
-    ["Duas barras: frete grátis e pack", "« Plus que 6 € » e « Ajoutez 1 paire »: as duas empurram o pedido para cima, que é o que o pedido médio de 80 € já mostra que o cliente faz.", "d", "Dados Shopify"],
-    ["Sugestão de uma meia barata", "A SUMMER (17 €) completa os 3 pares e o frete grátis de uma vez.", "", ""],
-    ["« C’est pour offrir »", "Embalagem e cartão de presente: no Natal, a maioria compra para presentear.", "r", "Happy Socks · Thistle Farms"],
-    ["Hoje", "Só 45 % de quem chega ao pagamento compra; 60 % do carrinho chega ao pagamento. Frete visível antes do pagamento ajuda nas duas etapas.", "d", "Dados Shopify"],
-  ]},
+// Tags das notas: m = referência da Marcia, h = a loja nos anos em que vendia mais, d = dados do Shopify, r = outras referências
+const CARRINHO = [
+  ["Abre ao lado, sem sair da página", "A pessoa vê o que pôs e continua comprando.", "", ""],
+  ["Duas barras que se calculam sozinhas", "Quanto falta para o frete grátis e quantos pares faltam para o desconto: as duas empurram o pedido para cima, como o pedido médio de 80 € já mostra que o cliente faz.", "d", "Dados Shopify"],
+  ["Sugestão de uma meia barata", "Completa os 3 pares e o frete grátis de uma vez.", "", ""],
+  ["« C’est pour offrir »", "Embalagem e cartão de presente: no Natal, a maioria compra para presentear.", "r", "Happy Socks · Thistle Farms"],
+  ["Hoje", "Só 45 % de quem chega ao pagamento compra; 60 % do carrinho chega ao pagamento. Frete visível antes do pagamento ajuda nas duas etapas.", "d", "Dados Shopify"],
 ];
-const abas = document.querySelector(".abas"), fPc = document.getElementById("f-pc"), fCel = document.getElementById("f-cel");
-const marcas = document.getElementById("marcas");
-let atual = PAGINAS[0];
-function url(p) { return p.url + (marcas.checked ? (p.url.includes("?") ? "&" : "?") + "marcas=1" : ""); }
-function mostrar(p) {
-  atual = p;
-  abas.querySelectorAll("button").forEach(b => b.setAttribute("aria-selected", b.dataset.id === p.id));
-  fPc.src = url(p); fCel.src = url(p); document.getElementById("abrir").href = url(p);
-  document.getElementById("notas").innerHTML = `<h3>Por que assim</h3><ul>${p.notas.map(([t, d, c, o]) => `<li>${o ? `<span class="tag ${c}">${o}</span>` : ""}<b>${t}</b><span>${d}</span></li>`).join("")}</ul>`;
-  history.replaceState(null, "", "#" + p.id);
+const VERSOES = [
+  { grupo: "As referências da Marcia", id: "veja", nome: "Veja", sub: "O site que ela mais gosta", novo: true, ref: "https://www.veja-store.com.br/",
+    paginas: { inicio: "veja-inicio.html", lista: "veja-lista.html", produto: "veja-produto.html", carrinho: "veja-produto.html?panier=1" },
+    notas: {
+      inicio: [
+        ["Foto grande, sem texto por cima", "Como a Veja: um carrossel de fotos inteiras, só com uma legenda pequena (nome e preço).", "m", "Veja"],
+        ["Quatro fotos pelas alturas", "No lugar de Homem, Mulher, Criança e Running, as alturas: invisibles, basses, mi-mollet, hautes. Cada uma leva à lista.", "m", "Veja"],
+        ["Meias sozinhas em fundo cinza, três por vez", "Faixa de ponta a ponta com fios finos. Embaixo do preço vem o preço do pack, no lugar do « 10x sem juros » da Veja.", "m", "Veja"],
+        ["Bloco « Projet »", "Foto inteira com o título no meio, depois cartões do projeto: fio reciclado, coleta, ateliê, etiqueta, peças únicas.", "m", "Veja"],
+        ["Desconto e frete na barra preta", "É a primeira coisa que se lê, em todas as páginas.", "d", "Dados Shopify"],
+      ],
+      lista: [
+        ["Quatro por linha, em fundo cinza claro", "Como a lista feminina da Veja: nome em maiúsculas pequenas, preço em negrito, uma cor por cartão.", "m", "Veja"],
+        ["Alturas em texto, filtros num botão", "A Veja tem só « Filtros »; acrescentei as alturas, porque é assim que se escolhe meia.", "r", "Bombas"],
+        ["O que falta", "LASKA, TOUNDRA e CANCAN aparecem com o selo amarelo até a sessão de fotos (D13).", "d", "Shopify"],
+      ],
+      produto: [
+        ["Foto grande à esquerda, painel com fios à direita", "Como a página do tênis na Veja: nome em maiúsculas, preço, cores como fotos, tamanhos em retângulos e o botão preto.", "m", "Veja"],
+        ["Acordeões com +", "Prazo, detalhes, composição, devoluções e avaliações ficam fechados, e a página fica curta.", "m", "Veja"],
+        ["Duas fotos grandes depois", "A Veja mostra duas fotos da coleção; aqui, duas fotos da meia usada.", "m", "Veja"],
+        ["No celular, barra fixa « Ajouter au panier »", "Acrescentada por nós: o celular converte 0,24 % contra 0,70 % no computador.", "d", "Dados Shopify"],
+      ],
+      carrinho: CARRINHO,
+    } },
+  { grupo: "As referências da Marcia", id: "bleuforet", nome: "Bleuforêt", sub: "Uma boa marca de meias", novo: true, ref: "https://www.bleuforet.fr/fr/",
+    paginas: { inicio: "bleuforet-inicio.html", lista: "bleuforet-lista.html", produto: "bleuforet-produto.html", carrinho: "bleuforet-produto.html?panier=1" },
+    notas: {
+      inicio: [
+        ["Foto de ambiente na tela inteira", "Título grande no meio, um botão branco e as setas no canto. O menu fica por cima da foto, como na Bleuforêt.", "m", "Bleuforêt"],
+        ["Três portas de entrada", "Chaussettes, bonnets e coffrets, cada uma com « Je découvre ».", "m", "Bleuforêt"],
+        ["Carrosséis de 5 com a meia usada", "A Bleuforêt mostra as meias no pé. Ao passar o mouse, a meia sozinha (quando a foto existe).", "m", "Bleuforêt"],
+        ["Aqui as fotos de hoje bastam", "Como a primeira foto é a meia usada, LASKA, TOUNDRA e CANCAN já aparecem bem. As fotos natureza morta entram como segunda foto.", "d", "Shopify"],
+        ["Texto da marca e garantias com ícones", "Um parágrafo no centro e as 4 garantias antes do rodapé azul-marinho.", "m", "Bleuforêt"],
+      ],
+      lista: [
+        ["Título e um texto curto", "« Chaussettes tricotées en France », com um parágrafo e « En savoir plus » (bom também para o Google).", "m", "Bleuforêt"],
+        ["Filtros em menus", "Tailles, Matières, Hauteurs, Couleurs, como a Bleuforêt.", "m", "Bleuforêt"],
+        ["Faixa do pack no meio da grade", "Lembra o desconto depois das 8 primeiras meias.", "r", "Le Slip Français"],
+      ],
+      produto: [
+        ["Duas fotos lado a lado", "A meia usada e a meia sozinha, como na página das meias Teckel da Bleuforêt; as outras fotos vêm embaixo.", "m", "Bleuforêt"],
+        ["Cores em bolinhas, tamanhos em caixas", "E a quantidade ao lado do botão preto.", "m", "Bleuforêt"],
+        ["Garantias com ícones sob o botão", "Expedição, frete grátis, etiqueta retour, pagamento seguro.", "m", "Bleuforêt"],
+        ["« Traçabilité : Fabriqué en France »", "Em verde no acordeão de detalhes, como a Bleuforêt faz.", "m", "Bleuforêt"],
+      ],
+      carrinho: CARRINHO,
+    } },
+  { grupo: "As referências da Marcia", id: "gallo", nome: "Gallo 1927", sub: "Sempre a foto clara, só o produto", novo: true, ref: "https://www.gallo1927.com/",
+    paginas: { inicio: "gallo-inicio.html", lista: "gallo-lista.html", produto: "gallo-produto.html", carrinho: "gallo-produto.html?panier=1" },
+    notas: {
+      inicio: [
+        ["Uma palavra em itálico colorido nos títulos", "« L’essentiel de la saison », « Nos incontournables »: a assinatura da Gallo, aqui com a Playfair e o framboesa da marca.", "m", "Gallo"],
+        ["Barra coral no topo, logo no centro", "O coral já é a cor da marca. Menu à esquerda, ícones à direita.", "m", "Gallo"],
+        ["Meias sozinhas em cartões cinza-claro", "Sempre a primeira foto clara, só o produto, como a Marcia disse da Gallo. Abas para trocar a seleção.", "m", "Gallo"],
+        ["Categorias com o número de artigos", "Invisibles (4), Basses (2)...: a pessoa vê quanto há em cada uma.", "m", "Gallo"],
+        ["Etiqueta retour, história e « journal »", "Uma faixa com a foto do fio, a história com os números e três artigos do journal de l’atelier.", "m", "Gallo"],
+      ],
+      lista: [
+        ["Título no centro e uma foto larga", "Como « Calze Donna » da Gallo, com as alturas em pílulas logo abaixo.", "m", "Gallo"],
+        ["Quantos artigos e o desconto na barra de filtros", "« Affichage 14 sur 14 » e « −10 % dès 3 paires ».", "m", "Gallo"],
+        ["Cartões cinza com o coração", "Favoritos, como na Gallo.", "m", "Gallo"],
+      ],
+      produto: [
+        ["Foto grande em moldura clara, miniaturas embaixo", "Como a página da meia multicolor da Gallo.", "m", "Gallo"],
+        ["As cores como um pedaço do tricô", "Os quadradinhos mostram o punho de cada meia ampliado, não uma bolinha de cor.", "m", "Gallo"],
+        ["Quatro garantias em caixas sob o botão", "Frete, troca, pagamento e a nota das avaliações.", "m", "Gallo"],
+        ["Perguntas frequentes no fim", "Tamanho, etiqueta retour, pack, prazo: tira as dúvidas sem sair da página.", "m", "Gallo"],
+      ],
+      carrinho: CARRINHO,
+    } },
+  { grupo: "As referências da Marcia", id: "mytheresa", nome: "Mytheresa", sub: "Só a página de produto", novo: true, ref: "https://www.mytheresa.com/fr/fr/femme/dries-van-noten-compensees-t-strap-en-cuir-marron-p01217453",
+    paginas: { produto: "mytheresa-produto.html", carrinho: "mytheresa-produto.html?panier=1" },
+    notas: {
+      produto: [
+        ["Primeiro a meia sozinha, em vários ângulos", "A foto da cor escolhida, depois de lado, de costas e o tricô de perto (os quadros amarelos são as fotos a fazer), e só depois as fotos usando. É o que a Marcia gostou.", "m", "Mytheresa"],
+        ["Miniaturas em coluna e foto grande", "Todas as fotos à vista; no celular, desliza com o dedo.", "m", "Mytheresa"],
+        ["O nome da marca em destaque", "« Chaussettes Orphelines » grande e o nome da meia embaixo, como a Mytheresa faz com o estilista.", "m", "Mytheresa"],
+        ["Tamanho num seletor, botão preto e coração", "Os tamanhos esgotados aparecem no seletor com « me prévenir ».", "m", "Mytheresa"],
+      ],
+      carrinho: CARRINHO,
+    } },
+  { grupo: "Propostas anteriores", id: "mistura", nome: "Mistura das referências", sub: "04/11 · versão C", ref: "",
+    paginas: { inicio: "accueil-c.html", lista: "collection-b.html", produto: "produit-b.html", carrinho: "produit-b.html?panier=1" },
+    notas: {
+      inicio: [["Um pouco de cada referência", "Foto e frase da Veja, alturas em círculos e garantias da Bleuforêt, grade natureza morta da Gallo.", "m", "Veja · Bleuforêt · Gallo"]],
+      lista: [["Uma cor por cartão, fundo branco", "Grade de fios finos, com o desconto no topo e o bloco de Natal no meio.", "m", "Veja · Gallo"]],
+      produto: [["Galeria com miniaturas ao lado", "A primeira proposta inspirada na Mytheresa.", "m", "Mytheresa"]],
+      carrinho: CARRINHO,
+    } },
+  { grupo: "Propostas anteriores", id: "vitrine", nome: "Vitrine", sub: "03/11 · versão A", ref: "",
+    paginas: { inicio: "accueil.html", lista: "collection.html", produto: "produit.html", carrinho: "produit.html?panier=1" },
+    notas: {
+      inicio: [
+        ["Produto, preço e estrelas na primeira tela", "Hoje a página inicial não mostra nenhum produto com preço; em 2019 e 2020 mostrava.", "h", "Loja em 2020"],
+        ["« Les plus aimées »: 8 produtos", "Meias são 88 % das vendas; LASKA, FUNNY e SUMMER fazem 37 %.", "d", "Dados Shopify"],
+        ["A etiqueta de devolução", "A ideia que só a Chaussettes Orphelines tem, e que os clientes citavam nas avaliações. Sumiu do site em 2022.", "h", "Loja em 2020-21"],
+      ],
+      lista: [["Filtro pela altura e régua do pack", "Hoje são 3 coleções separadas no menu.", "r", "Bombas · Label Chaussette"]],
+      produto: [["Sob o botão: frete, etiqueta, troca", "Tudo o que a página de 2021 dizia, em 3 linhas.", "h", "Loja em 2021"]],
+      carrinho: CARRINHO,
+    } },
+  { grupo: "Propostas anteriores", id: "missao", nome: "Missão", sub: "03/11 · versão B, só a página inicial", ref: "",
+    paginas: { inicio: "accueil.html?v=b" },
+    notas: { inicio: [
+      ["A história primeiro", "A missão abre a página, com foto grande e os números logo abaixo; os produtos vêm em seguida.", "r", "Thistle Farms · Worn Wear"],
+      ["O risco", "Uma tela a mais até o primeiro preço. No celular, onde está a maior perda, as outras tendem a vender mais. Serve bem como página « Notre histoire ».", "d", "Dados Shopify"],
+    ] } },
+];
+const PAGINAS = [["inicio", "Início"], ["lista", "Lista"], ["produto", "Produto"], ["carrinho", "Carrinho"]];
+const $ = id => document.getElementById(id);
+const quadro = $("quadro"), marcas = $("marcas");
+let versao = VERSOES[0], pagina = "inicio", aparelho = "pc";
+
+let grupoAnterior = "";
+$("versoes").innerHTML = VERSOES.map(v => {
+  const titulo = v.grupo !== grupoAnterior ? `<p class="rotulo" style="margin:${grupoAnterior ? "14px" : "0"} 0 4px;color:#9c8e83">${v.grupo}</p>` : "";
+  grupoAnterior = v.grupo;
+  return `${titulo}<button class="opcao" data-id="${v.id}"><span class="letra">${v.nome[0]}</span><b>${v.nome}${v.novo ? '<span class="novo">novo</span>' : ""}</b><small>${v.sub}</small></button>`;
+}).join("");
+
+const semMarcas = u => u.replace(/[?&]marcas=1/, "").replace(/\?$/, "");
+const comMarcas = u => u + (marcas.checked ? (u.includes("?") ? "&" : "?") + "marcas=1" : "");
+
+function mostrar(v, p, recarregar = true) {
+  versao = v;
+  pagina = v.paginas[p] ? p : (v.paginas[pagina] ? pagina : Object.keys(v.paginas)[0]);
+  const url = comMarcas(v.paginas[pagina]);
+  document.querySelectorAll(".opcao").forEach(b => b.setAttribute("aria-current", b.dataset.id === v.id));
+  $("paginas").innerHTML = PAGINAS.map(([id, nome]) => `<button data-p="${id}" aria-pressed="${id === pagina}"${v.paginas[id] ? "" : ' disabled title="Esta referência é só da página de produto"'}>${nome}</button>`).join("");
+  if (recarregar) quadro.src = url;
+  $("abrir").href = url;
+  $("abrir-ref").hidden = !v.ref; $("abrir-ref").href = v.ref || "#";
+  $("abrir-ref").textContent = `Abrir o site da ${v.nome} ↗`;
+  $("nome-cel").textContent = `${v.nome} · ${PAGINAS.find(x => x[0] === pagina)[1]}`;
+  $("notas").innerHTML = (v.notas[pagina] || []).map(([t, d, c, ref]) => `<div class="nota">${ref ? `<span class="tag ${c}">${ref}</span>` : ""}<b>${t}</b><span>${d}</span></div>`).join("");
+  history.replaceState(null, "", `#${v.id}/${pagina}${aparelho === "cel" ? "/celular" : ""}`);
+  document.body.classList.remove("painel-aberto");
 }
-abas.innerHTML = PAGINAS.map(p => `<button role="tab" data-id="${p.id}">${p.nome}</button>`).join("");
-abas.onclick = e => { const b = e.target.closest("button"); if (b) mostrar(PAGINAS.find(p => p.id === b.dataset.id)); };
-marcas.onchange = () => mostrar(atual);
+function trocarAparelho(a) {
+  aparelho = a;
+  document.body.classList.toggle("pc", a === "pc"); document.body.classList.toggle("cel", a === "cel");
+  document.querySelectorAll("[data-ap]").forEach(b => b.setAttribute("aria-pressed", b.dataset.ap === a));
+  history.replaceState(null, "", `#${versao.id}/${pagina}${a === "cel" ? "/celular" : ""}`);
+  escala();
+}
+// No computador, se a tela for estreita demais, a maquete é desenhada a 1280 px e reduzida, para não virar a versão de celular
 function escala() {
-  fPc.style.transform = `scale(${document.getElementById("pc").clientWidth / 1440})`;
-  fCel.style.transform = `scale(${fCel.parentElement.clientWidth / 390})`;   // a tela do celular encolhe junto com a moldura
+  const palco = $("palco"), estreito = innerWidth <= 760;
+  quadro.style.transform = ""; quadro.style.width = ""; quadro.style.height = "";
+  if (aparelho !== "pc" || estreito) return;
+  const w = palco.clientWidth;
+  if (w < 1100) { const s = w / 1280; quadro.style.width = "1280px"; quadro.style.height = palco.clientHeight / s + "px"; quadro.style.transform = `scale(${s})`; }
 }
-addEventListener("resize", escala); escala();
-mostrar(PAGINAS.find(p => "#" + p.id === location.hash) || PAGINAS[0]);
+function passoVersao(d) { const i = VERSOES.indexOf(versao); mostrar(VERSOES[(i + d + VERSOES.length) % VERSOES.length], pagina); }
+function passoPagina(d) {
+  const ids = PAGINAS.map(x => x[0]).filter(id => versao.paginas[id]);
+  mostrar(versao, ids[(ids.indexOf(pagina) + d + ids.length) % ids.length]);
+}
+
+$("versoes").onclick = e => { const b = e.target.closest(".opcao"); if (b) mostrar(VERSOES.find(v => v.id === b.dataset.id), pagina); };
+$("paginas").onclick = e => { const b = e.target.closest("button"); if (b && !b.disabled) mostrar(versao, b.dataset.p); };
+document.querySelectorAll("[data-ap]").forEach(b => b.onclick = () => trocarAparelho(b.dataset.ap));
+marcas.onchange = () => mostrar(versao, pagina);
+$("fechar-painel").onclick = () => { document.body.classList.add("fechado"); setTimeout(escala, 380); };
+$("abrir-painel").onclick = () => { document.body.classList.remove("fechado"); setTimeout(escala, 380); };
+$("menu-cel").onclick = () => document.body.classList.add("painel-aberto");
+$("veu").onclick = () => document.body.classList.remove("painel-aberto");
+$("ant-cel").onclick = () => passoVersao(-1); $("prox-cel").onclick = () => passoVersao(1);
+addEventListener("keydown", e => {
+  const k = { ArrowDown: () => passoVersao(1), ArrowUp: () => passoVersao(-1), ArrowRight: () => passoPagina(1), ArrowLeft: () => passoPagina(-1) }[e.key];
+  if (k) { k(); e.preventDefault(); }
+});
+addEventListener("resize", escala);
+
+// A maquete avisa quando a pessoa navega dentro dela (link, logo, carrinho): a barra marca a referência e a página certas
+addEventListener("message", e => {
+  if (!e.data || !e.data.maquete) return;
+  const aberta = semMarcas(e.data.maquete);
+  if (versao.paginas[pagina] === aberta) return;
+  const cand = [versao, ...VERSOES.filter(v => v !== versao)];
+  for (const v of cand) { const p = Object.keys(v.paginas).find(k => v.paginas[k] === aberta); if (p) { mostrar(v, p, false); return; } }
+});
+
+// Balão da primeira visita
+try { if (!localStorage.getItem("co-dica-r6")) $("dica").hidden = false; } catch (e) { $("dica").hidden = false; }
+$("entendi").onclick = () => { $("dica").hidden = true; try { localStorage.setItem("co-dica-r6", "1"); } catch (e) {} };
+
+const [idHash, pagHash, apHash] = location.hash.slice(1).split("/");
+if (apHash === "celular" || innerWidth <= 760) trocarAparelho("cel");
+mostrar(VERSOES.find(v => v.id === idHash) || VERSOES[0], pagHash || "inicio");
+escala();
 </script>
 </body>
 </html>
